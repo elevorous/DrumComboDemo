@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Drum Combo Demo</title>
+        <link href="index.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body>
+        <form onsubmit="onSubmit(event)">
+            <div>
+                <label for="nValue">n</label>
+                <input type="number" min="2" max="9" id="nValue" value="2">
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+            <div>
+                <label for="cellHeight">Cell Height</label>
+                <input type="number" min="2" max="6" id="cellHeight" value="3">
+            </div>
+            <div>
+                <label for="rowGap">Row Gap</label>
+                <input type="number" min="0" max="3" id="rowGap" value="0">
+            </div>
+            <div>
+                <input type="checkbox" id="excludeFirstRow" checked="checked">
+                <label for="excludeFirstRow">Hide first row</label>
+            </div>
+        </form>
+        <div id="renderArea" class="first-row-hidden"></div>
+        <script src="index.js" type="text/javascript"></script>
+    </body>
+</html>

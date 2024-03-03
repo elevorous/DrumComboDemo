@@ -1,0 +1,83 @@
+:root {
+    --cell-height: 3em;
+    --row-gap: 0em;
+}
+
+body {
+    background: powderblue;
+    padding: 2em;
+}
+
+form {
+    margin-bottom: 2em;
+    border: 1px solid darkgrey;
+}
+
+form > div:nth-child(2) {
+    flex: 1;
+}
+
+input {
+    font-size: 1rem;
+    margin: 0;
+}
+
+input[type="number"] {
+    padding: 0.4em 0.8em;
+}
+
+.combination {
+    width: 100%;
+    display: flex;
+}
+
+.combination-wrapper, form {
+    display: flex;
+    align-items: center;
+    column-gap: 1em;
+}
+
+.combination-wrapper:not(:last-child) {
+    margin-bottom: var(--row-gap);
+}
+
+.combination-wrapper > div:first-child {
+    min-width: 3ch;
+    text-align: right;
+}
+
+[data-bit] {
+    height: var(--cell-height);
+    flex: auto;
+    border: 1px solid red;
+}
+
+[data-bit="1"] {
+    background: black;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+}
+
+#renderArea, form {
+    background: white;
+    padding: 2em;
+}
+
+#renderArea.first-row-hidden > .combination-wrapper:first-child {
+    display: none;
+}
+
+/* Some bug in Safari makes it so that it won't repaint the page when --row-gap changes :/
+#renderArea {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--row-gap);
+}
+*/
+
+
+@media print {
+    form {
+        display: none;
+    }
+}
