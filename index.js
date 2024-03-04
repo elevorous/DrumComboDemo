@@ -95,6 +95,19 @@ function generateCombinations2(n) {
 // }
 
 /**
+* @recursive
+*
+* @param {int} value
+* @return {int} the lowest odd-number factor of `value` which is NOT 1, unless
+*               `value` is 2 or less (in which case 1 can be the only answer)
+*/
+function getLowestUnsplittableFactor(value) {
+    if (value <= 2) return 1;
+    if (value % 2 == 1) return value;
+    return getLowestUnsplittableFactor(value / 2);
+}
+
+/**
 * TODO
 */
 function sortCombinations(combinations) {
@@ -151,14 +164,23 @@ function sortCombinations(combinations) {
                         let bNum = parseInt(b, 2);
 
                         // this sort of works for the 2 bitCount numbers in n=5, but not the 3 bitCount numbers :/
-                        if (aNum > bNum) {
-                            if (aNum % bNum === 0) return -1;
-                            return (aNum - bNum) < Math.floor((bNum / 2)) ? -1 : 1;
+                        // if (aNum > bNum) {
+                        //     if (aNum % bNum === 0) return -1;
+                        //     return (aNum - bNum) < Math.floor((bNum / 2)) ? -1 : 1;
+                        // }
+                        // else {
+                        //     if (bNum % aNum === 0) return 1;
+                        //     return (bNum - aNum) < Math.floor((aNum / 2)) ? 1 : -1;
+                        // }
+
+                        if ((aNum > bNum) && (aNum % bNum === 0)) {
+                            return -1;
                         }
-                        else {
-                            if (bNum % aNum === 0) return 1;
-                            return (bNum - aNum) < Math.floor((aNum / 2)) ? 1 : -1;
+                        else if ((bNum > aNum) && (bNum % aNum === 0)) {
+                            return 1;
                         }
+
+                        return (getLowestUnsplittableFactor(aNum) < getLowestUnsplittableFactor(bNum)) ? -1 : 1;
                     }
 
                     return aGroupWrapped ? -1 : 1;
