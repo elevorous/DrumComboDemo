@@ -8,13 +8,9 @@ body {
     padding: 2em;
 }
 
-form {
+.control-panel {
     margin-bottom: 2em;
     border: 1px solid darkgrey;
-}
-
-form > div:nth-child(2) {
-    flex: 1;
 }
 
 input {
@@ -31,10 +27,14 @@ input[type="number"] {
     display: flex;
 }
 
-.combination-wrapper, form {
+.combination-wrapper, .control-panel, form {
     display: flex;
     align-items: center;
     column-gap: 1em;
+}
+
+.control-panel {
+    justify-content: space-between;
 }
 
 .combination-wrapper:not(:last-child) {
@@ -58,7 +58,7 @@ input[type="number"] {
     -webkit-print-color-adjust: exact;
 }
 
-#renderArea, form {
+#renderArea, .control-panel {
     background: white;
     padding: 2em;
 }

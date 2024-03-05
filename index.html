@@ -5,28 +5,45 @@
         <link href="index.css" rel="stylesheet" type="text/css"></link>
     </head>
     <body>
-        <form onsubmit="onSubmit(event)">
-            <div>
-                <label for="nValue">n</label>
-                <input type="number" min="2" max="9" id="nValue" value="2">
-            </div>
-            <div>
-                <button type="submit">Submit</button>
-            </div>
-            <div>
-                <label for="cellHeight">Cell Height</label>
-                <input type="number" min="2" max="6" id="cellHeight" value="3">
-            </div>
-            <div>
-                <label for="rowGap">Row Gap</label>
-                <input type="number" min="0" max="3" id="rowGap" value="0">
-            </div>
-            <div>
-                <input type="checkbox" id="excludeFirstRow" checked="checked">
-                <label for="excludeFirstRow">Hide first row</label>
-            </div>
-        </form>
+        <div class="control-panel">
+            <form id="generateControls" onsubmit="generateGrid(event)">
+                <div>
+                    <label for="nValue">n</label>
+                    <input type="number" min="2" max="9" id="nValue" value="2">
+                </div>
+                <div>
+                    <button type="submit">Generate</button>
+                </div>
+            </form>
+            <form id="metronomeControls" onsubmit="event.preventDefault()">
+                <div>
+                    <label for="bpm">BPM</label>
+                    <input type="number" min="20" max="400" id="bpm" value="60">
+                </div>
+                <div>
+                    <button type="submit" id="metronomeToggleButton">Start</button>
+                </div>
+            </form>
+            <form id="visualControls" onsubmit="event.preventDefault()">
+                <div>
+                    <label for="cellHeight">Cell Height</label>
+                    <input type="number" min="2" max="6" id="cellHeight" value="3">
+                </div>
+                <div>
+                    <label for="rowGap">Row Gap</label>
+                    <input type="number" min="0" max="3" id="rowGap" value="0">
+                </div>
+                <div>
+                    <input type="checkbox" id="excludeFirstRow" checked="checked">
+                    <label for="excludeFirstRow">Hide first row</label>
+                </div>
+            </form>
+        </div>
         <div id="renderArea" class="first-row-hidden"></div>
         <script src="index.js" type="text/javascript"></script>
+        <div class="credits">
+            Created by <a href="https://github.com/elevorous">elevorous</a><br>
+            <span>Metronome components: <a href="https://github.com/g-danna/metronome">Guglielmo D'Anna</a> & <a href="https://github.com/grantjames/metronome/tree/master">Grant James</a></span>
+        </div>
     </body>
 </html>

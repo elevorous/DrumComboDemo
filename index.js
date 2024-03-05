@@ -1,13 +1,9 @@
 /**
-* Script should be at bottom of HTML body
 *
 * @author elevorous
 */
 
 'use strict';
-
-const EMPTY_VAL = 0;
-const FILLED_VAL = 1;
 
 const N_VALUE_INPUT = document.getElementById("nValue");
 const ROW_GAP_INPUT = document.getElementById("rowGap");
@@ -21,9 +17,9 @@ const HTML_CACHE = {};
 let currentVal = null;
 
 /**
-*
+* @param {object} event - the onsubmit event
 */
-function onSubmit(event) {
+function generateGrid(event) {
     event.preventDefault();
     const val = parseInt(N_VALUE_INPUT.value);
 
@@ -32,9 +28,9 @@ function onSubmit(event) {
 
     // if we don't have this generated HTML in the cache, create it
     if (!HTML_CACHE[val]) {
-        let combinations = generateCombinations2(val);
+        let combinations = generateCombinations(val);
         combinations = sortCombinations(combinations);
-        HTML_CACHE[val] = combinations.map((combo, i) => createCombinationsHTML(combo, i)).join('');
+        HTML_CACHE[val] = combinations.map((combo, i) => createCombinationHTML(combo, i)).join('');
     }
 
     // the ul element .children.item(0)
@@ -43,9 +39,11 @@ function onSubmit(event) {
 }
 
 /**
-*
+* @param {string} combination - a string value of a binary representation of a number
+* @param {int} index - the numeric index to mark this combination as
+* @return {string} - the string output for a HTML structure representing the given combination
 */
-function createCombinationsHTML(combination, index) {
+function createCombinationHTML(combination, index) {
     const n = combination.length;
     return  `<div class="combination-wrapper">
                 <div>${index}</div>
@@ -56,9 +54,11 @@ function createCombinationsHTML(combination, index) {
 }
 
 /**
-*
+* @param {int} n
+* @return {string[]} - an array of strings, which are the binary representations of
+*                       0 through to 2^n
 */
-function generateCombinations2(n) {
+function generateCombinations(n) {
     const totalCombinations = Math.pow(2, n);
     let combinations = new Array(totalCombinations);
 
@@ -69,30 +69,6 @@ function generateCombinations2(n) {
 
     return combinations;
 }
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log
-// function getBaseLog(x, y) {
-//     return Math.log(y) / Math.log(x);
-// }
-
-// don't know what I'm doing here.. this doesn't work.
-// function countPositiveBits(value, n) {
-//     if (!value || !n) return 0;
-//     if (value === 1) return 1;
-//
-//     let bitCount = 0;
-//     const power = Math.pow(2, n);
-//
-//     let remainder = value % power;
-//     if (!remainder) {
-//         bitCount = 1;
-//     }
-//     else {
-//         bitCount += countPositiveBits(remainder, n - 1);
-//     }
-//
-//     return bitCount;
-// }
 
 /**
 * @recursive
@@ -108,10 +84,21 @@ function getLowestUnsplittableFactor(value) {
 }
 
 /**
-* TODO
+* Will sort the given array of combinations according to the following rules:
+*   1. Combinations are foremost grouped according to how many "positive" (1) bits
+*       they have in them. These "bitCount" groups are sorted in ascending fashion.
+*   2. Combinations which have all their positive bits in one contiguous group come first, ordered
+*       from highest to lowest value.
+*   3. Combinations with split groups which can be considered "wraparounds" of contiguous groups
+*       come next, i.e. 100011, 1101, 1100111. These are ordered lowest to highest value.
+*   4. Combinations with split non-wraparound groups come last. These are ordered according
+*       to their lowest odd factor > 1. Reasoning explained in code comments below.
+*
+*
+* @param {string[]} combinations - an array of strings representing binary numbers
 */
 function sortCombinations(combinations) {
-    // split combinations up into counts of bits
+    // phase 1: split combinations up into counts of bits
     let bitGroupings = [];
 
     combinations.forEach((item, i) => {
@@ -123,11 +110,14 @@ function sortCombinations(combinations) {
         let bitCount = item.replaceAll("0", "").length;
 
         if (!bitGroupings[bitCount]) bitGroupings[bitCount] = [];
+        // we add to the front of the array, so we're creating a natural sorted order of highest to lowest
+        //  value in each bitCount array
         bitGroupings[bitCount].unshift(item);
     });
 
     let ret = [];
 
+    // phase 2: do the sorting
     bitGroupings.forEach((groupArray, bitCount) => {
         // bitcounts of 0, 1 and n will already have been constructed in the right order.
         if (bitCount > 1 && bitCount < bitGroupings.length - 1) {
@@ -160,19 +150,44 @@ function sortCombinations(combinations) {
                         return a > b ? 1 : -1;
                     }
                     else if (!aGroupWrapped && !bGroupWrapped) {
+                        /**
+                        * This is the most interesting case, best illustrated with an example.
+                        *
+                        * Let n = 5, bitCount = 3
+                        * At the end of phase 1, you have this:
+                        *   ["11100", "11010", "11001", "10110", "10101", "10011", "01110", "01101", "01011", "00111"]
+                        *
+                        * Indexes 0, 6, 9 are taken care of by the grouped case.
+                        * Indexes 2 and 5 are dealt with by the wraparound case.
+                        * That leaves:
+                        *   ["11010", "10110", "10101","01101", "01011"]
+                        * which in decimal is:
+                        *   [26, 22, 21, 13, 11]
+                        *
+                        * We want this order, where we have the pattern with the fewest positive bits at the beginning
+                        *   shifting along until we exhaust it, then the pattern with the next fewest positive bits at
+                        *   the beginning shifting along, then the third next and so on, with any equally-spaced
+                        *   non-shifting pattern coming last. E.g:
+                        *       ["10110", "01011", "11010", "01101", "10101"]
+                        *   or
+                        *       [22, 11, 26, 13, 21]
+                        *
+                        * Now, the act of shifting all bits one place to the right is just a matter of halving, and you can
+                        *   see that pattern in the decimal representation.
+                        * What's less obvious is determining the order in which these smaller orderings of halves need to
+                        *   go in. But, if you take a look at the last element in each of these sub-orders, (which will
+                        *   always be an odd number) you'll notice that they *increase*:
+                        *       [22, *11*, 26, *13*, *21*]
+                        *
+                        * This is the crux of this case. Take another example, where n=5, bitCount=2:
+                        *       [..., 20, 10, *5*, 18, *9*]
+                        */
+
                         let aNum = parseInt(a, 2);
                         let bNum = parseInt(b, 2);
 
-                        // this sort of works for the 2 bitCount numbers in n=5, but not the 3 bitCount numbers :/
-                        // if (aNum > bNum) {
-                        //     if (aNum % bNum === 0) return -1;
-                        //     return (aNum - bNum) < Math.floor((bNum / 2)) ? -1 : 1;
-                        // }
-                        // else {
-                        //     if (bNum % aNum === 0) return 1;
-                        //     return (bNum - aNum) < Math.floor((aNum / 2)) ? 1 : -1;
-                        // }
-
+                        // if a or b is a factor of the other, we can skip comparing unsplittable factors (since
+                        //  they'll be the same), e.g. 20 vs 10 (both devolve to 5)
                         if ((aNum > bNum) && (aNum % bNum === 0)) {
                             return -1;
                         }
@@ -195,6 +210,8 @@ function sortCombinations(combinations) {
     });
 
     console.log(bitGroupings);
+    // for debugging
+    window.currentBitGroupings = bitGroupings;
 
     return ret;
 }
@@ -215,69 +232,3 @@ function sortCombinations(combinations) {
         RENDER_AREA_DIV.className = EXCLUDE_FIRST_ROW_CHECKBOX.checked ? "first-row-hidden" : "";
     });
 })();
-
-/*
-* ========================================================================================================================
-* ======================================================== unused ========================================================
-* ========================================================================================================================
-*/
-
-/**
-*
-* @param {int} n
-*/
-function generateCombinations(n) {
-    const totalCombinations = Math.pow(2, n);
-    let combinations = new Array(totalCombinations);
-
-    // Couple of interesting lessons learned:
-    // 1. Array.fill, when given an object, will fill the array with
-    //      references to that same single object, NOT create a new object
-    //      instance for each index.
-    // 2. Arrays which have empty (sparse) elements will not include them
-    //      in iterative calls like Array.forEach, Array.map, etc.
-    for (let i = 0; i < combinations.length; i++) {
-        combinations[i] = new Array(n);
-    }
-
-    // what you actually have here is a numeric sequence of binary numbers!
-    // e.g. [[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
-    combinations = fillCombinations(combinations);
-
-    return combinations;
-}
-
-/**
-* @recursive
-*
-* @param {int[][]} combinations - an array of integer arrays (each initally filled with undefined values),
-*                                   which will be populated recursively with 1s and 0s.
-* @param {int} applyToIndex - the index of this integer arrays on which this recursion will write to.
-*/
-function fillCombinations(combinations, applyToIndex) {
-    let ret = [];
-
-    if (combinations) {
-        // we cannot get a left/right split, so just return
-        if (combinations.length == 1) {
-            ret = combinations;
-        }
-        else {
-            applyToIndex = applyToIndex || 0;
-
-            const midpoint = combinations.length / 2;
-            let left = combinations.slice(0, midpoint);
-            let right = combinations.slice(midpoint, combinations.length);
-
-            left.forEach(combination => combination[applyToIndex] = EMPTY_VAL);
-            right.forEach(combination => combination[applyToIndex] = FILLED_VAL);
-
-            left = fillCombinations(left, applyToIndex + 1);
-            right = fillCombinations(right, applyToIndex + 1);
-
-            ret = left.concat(right);
-        }
-    }
-
-    return ret;
-}
