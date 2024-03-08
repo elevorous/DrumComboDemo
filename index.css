@@ -1,11 +1,28 @@
 :root {
     --cell-height: 3em;
     --row-gap: 0em;
+    --current-visible-row-index: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
 }
 
 body {
     background: powderblue;
     padding: 2em;
+    margin: 0;
+    height: 100vh;
+}
+
+.page-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .control-panel {
@@ -58,13 +75,25 @@ input[type="number"] {
     -webkit-print-color-adjust: exact;
 }
 
-#renderArea, .control-panel {
+.render-area--wrapper, .control-panel {
     background: white;
     padding: 2em;
 }
 
-#renderArea.first-row-hidden > .combination-wrapper:first-child {
-    display: none;
+.render-area--wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.credits {
+    text-align: center;
+    font-size: 0.9em;
+}
+
+#renderArea {
+    transition: top 0.2s;
+    top: 0;
+    position: relative;
 }
 
 /* Some bug in Safari makes it so that it won't repaint the page when --row-gap changes :/
@@ -75,6 +104,29 @@ input[type="number"] {
 }
 */
 
+body[data-auto-scroll-enabled="true"] .render-area--wrapper {
+    overflow-y: hidden;
+}
+
+body[data-auto-scroll-enabled="true"] #renderArea {
+    position: absolute;
+    width: calc(100% - 4em);
+    --row-gap: 3em;
+
+    top: calc(50% - (var(--current-visible-row-index) * (var(--cell-height) + var(--row-gap))));
+}
+
+body[data-auto-scroll-enabled="true"] .combination-wrapper {
+    opacity: 0.25;
+}
+
+body[data-auto-scroll-enabled="true"] [data-current] {
+    opacity: 1;
+}
+
+body[data-auto-scroll-enabled="true"] [data-current] + .combination-wrapper {
+    opacity: 0.5;
+}
 
 @media print {
     form {
