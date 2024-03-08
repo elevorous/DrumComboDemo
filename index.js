@@ -26,7 +26,7 @@
 
     let currentVal = null;
     let autoScrollEnabled = false;
-    let metronome = new Metronome(DEFAULT_BPM);
+    let metronome = new CallbackMetronome(DEFAULT_BPM, doOnTick);
     let currentVisibleRows = null;
 
     function setAutoScrollEnabledAttr(value) {
@@ -267,6 +267,14 @@
     */
     function stopAutoScroll() {
 
+    }
+
+    /**
+     *
+     * @param {object} tickData
+     */
+    function doOnTick(tickData) {
+        console.log(tickData.detail);
     }
 
     /**
