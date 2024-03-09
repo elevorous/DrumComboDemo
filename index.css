@@ -120,11 +120,11 @@ body[data-auto-scroll-enabled="true"] .combination-wrapper {
     opacity: 0.25;
 }
 
-body[data-auto-scroll-enabled="true"] [data-current] {
+body[data-auto-scroll-enabled="true"] [data-active] {
     opacity: 1;
 }
 
-body[data-auto-scroll-enabled="true"] [data-current] + .combination-wrapper {
+body[data-auto-scroll-enabled="true"] [data-active] + .combination-wrapper {
     opacity: 0.5;
 }
 

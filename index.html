@@ -19,7 +19,7 @@
                 <form id="metronomeControls" onsubmit="toggleMetronome(event)">
                     <div>
                         <label for="bpm">BPM</label>
-                        <input type="number" min="20" max="400" id="bpm" value="60">
+                        <input type="number" min="20" max="280" id="bpm" value="60">
                     </div>
                     <div>
                         <button type="submit" id="metronomeToggleButton">Start</button>
@@ -30,6 +30,16 @@
                         <input type="checkbox" id="enableAutoScroll">
                         <label for="enableAutoScroll">Auto scroll</label>
                     </div>
+                    <div>
+                        <label for="repetitions">Repetitions</label>
+                        <input type="number" min="1" max="8" id="repetitions" value="1">
+                    </div>
+                    <!--
+                    <div>
+                        <label for="preambleBeats">Preamble Beats</label>
+                        <input type="number" min="0" max="32" id="preambleBeats" value="0">
+                    </div>
+                -->
                 </form>
                 <form id="visualControls" onsubmit="event.preventDefault()">
                     <div>
@@ -50,8 +60,7 @@
                 <div id="renderArea"></div>
             </div>
             <div class="credits">
-                Created by <a href="https://github.com/elevorous">elevorous</a><br>
-                <span>Metronome component by <a href="https://github.com/grantjames/metronome/tree/master">Grant James</a></span>
+                By <a href="https://github.com/elevorous">elevorous</a>
             </div>
         </div>
         <!-- Scripts -->

@@ -69,6 +69,10 @@ class CallbackMetronome extends Metronome {
         return 800;
     }
 
+    static get PREAMBLE_TONE() {
+        return 600;
+    }
+
     // the audible duration of one "click", in seconds
     static get CLICK_DURATION() {
         return 0.03;
@@ -85,6 +89,23 @@ class CallbackMetronome extends Metronome {
         super(tempo);
         this.clickCallbackFn = clickCallbackFn;
         this.beatsSinceStarted = 0;     // keep a running total of all beats that have been played
+        this.preambleBeats = 0;
+    }
+
+    /**
+     * @getter
+     * @return {int} - the number of complete bars that have elapsed since the metronome started
+     */
+    get barsSinceStarted() {
+        return Math.floor(this.beatsSinceStarted / this.beatsPerBar);
+    }
+
+    /**
+     * @getter
+     * @return {boolean} - true if we are currently at the beginning of a new bar
+     */
+    get newBarStarted() {
+        return this.beatsSinceStarted % this.beatsPerBar == 0;
     }
 
     /**
@@ -98,16 +119,9 @@ class CallbackMetronome extends Metronome {
             osc.addEventListener("started", this.clickCallbackFn);
         }
 
-        return osc;
-    }
+        osc.addEventListener("ended", (e) => this.beatsSinceStarted++);
 
-    /**
-     *
-     * @Override
-     */
-    nextNote() {
-        super.nextNote();
-        this.beatsSinceStarted++;
+        return osc;
     }
 
 
@@ -117,7 +131,8 @@ class CallbackMetronome extends Metronome {
      */
     scheduleNote(beatNumber, time) {
         // push the note on the queue, even if we're not playing.
-        this.notesInQueue.push({ note: beatNumber, time: time });
+        // // TODO: not sure ther's any point in keeping this in tis current form - also it grows indefinitely :/
+        // this.notesInQueue.push({ note: beatNumber, time: time });
 
         // once a node has been played, it can't be replayed, so we need to make a new
         //  set of nodes on each schedule.
@@ -126,6 +141,7 @@ class CallbackMetronome extends Metronome {
             beatsPerBar: this.beatsPerBar,
             metronome: this
         });
+
         const envelope = this.audioContext.createGain();
 
         // also provide a master volume node
@@ -144,6 +160,27 @@ class CallbackMetronome extends Metronome {
 
         oscillator.start(time);
         oscillator.stop(time + CallbackMetronome.CLICK_DURATION);
+    }
+
+    // stop() {
+    //     super.stop();
+    //     this.audioContext.suspend();
+    //     this.audioContext.close().then((function() {
+    //         this.audioContext = null;
+    //     }).bind(this));
+    // }
+
+    /**
+     *
+     * @Override
+     */
+    scheduler() {
+        // while there are notes that will need to play before the next interval, schedule them and advance the pointer.
+        while (this.nextNoteTime < this.audioContext.currentTime + this.scheduleAheadTime) {
+            // TODO: account for preamble beats.
+            this.scheduleNote(this.currentBeatInBar, this.nextNoteTime);
+            this.nextNote();
+        }
     }
 
     /**

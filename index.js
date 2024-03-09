@@ -15,12 +15,14 @@
     const METRONOME_TOGGLE_BUTTON = document.getElementById("metronomeToggleButton");
     const BODY = document.getElementsByTagName("body")[0];
     const AUTO_SCROLL_CHECKBOX = document.getElementById("enableAutoScroll");
+    const REPETITIONS_INPUT = document.getElementById("repetitions");
 
     const ROOT = document.documentElement;
 
+    // TODO: source consts from the element attributes
     const DEFAULT_BPM = 60;
     const MIN_BPM = 20;
-    const MAX_BPM = 400;
+    const MAX_BPM = 280;
 
     const HTML_CACHE = {};
 
@@ -28,6 +30,8 @@
     let autoScrollEnabled = false;
     let metronome = new CallbackMetronome(DEFAULT_BPM, doOnTick);
     let currentVisibleRows = null;
+    let barRepetitions = 1;
+    let currentActiveVisibleRowIndex = 0;
 
     function setAutoScrollEnabledAttr(value) {
         BODY.setAttribute("data-auto-scroll-enabled", value);
@@ -56,6 +60,7 @@
 
         RENDER_AREA_DIV.innerHTML = HTML_CACHE[val];
         currentVal = val;
+        metronome.beatsPerBar = currentVal;
 
         toggleFirstRowVisibility();
     }
@@ -244,14 +249,27 @@
     */
     function toggleMetronome(event) {
         event.preventDefault();
-        metronome.startStop();
 
-        METRONOME_TOGGLE_BUTTON.textContent = metronome.isRunning ? "Stop" : "Start";
-        setMetronomeRunningAttr(metronome.isRunning);
-
-        if (autoScrollEnabled) {
-            metronome.isRunning ? startAutoScroll() : stopAutoScroll();
+        if (metronome.isRunning) {
+            stopMetronome();
         }
+        else {
+            startMetronome();
+        }
+    }
+
+    function startMetronome() {
+        METRONOME_TOGGLE_BUTTON.textContent = "Stop";
+        setMetronomeRunningAttr(true);
+        autoScrollEnabled && startAutoScroll();
+        metronome.start();
+    }
+
+    function stopMetronome() {
+        metronome.stop();
+        METRONOME_TOGGLE_BUTTON.textContent = "Start";
+        autoScrollEnabled && stopAutoScroll();
+        setMetronomeRunningAttr(false);
     }
 
     /**
@@ -259,22 +277,54 @@
     */
     function startAutoScroll() {
         currentVisibleRows = getCurrentVisibleRows();
-        currentVisibleRows.item(0).setAttribute("data-current", "");
+        currentActiveVisibleRowIndex = 0;
+        setActiveVisibleRow(currentActiveVisibleRowIndex);
     }
 
     /**
     * @return {undefined}
     */
     function stopAutoScroll() {
+        document.querySelectorAll(".combination-wrapper[data-active]").forEach((e) => e.removeAttribute("data-active"));
+        ROOT.style.setProperty("--current-visible-row-index", 0);
+        currentVisibleRows = null;
+        currentActiveVisibleRowIndex = 0;
+    }
 
+    /**
+    * @param {int} index
+    * @return {undefined}
+    */
+    function setActiveVisibleRow(index) {
+        // TODO: sanity checks etc.
+        if (index - 1 >= 0) {
+            currentVisibleRows?.item(index - 1).removeAttribute("data-active");
+        }
+        currentVisibleRows?.item(index)?.setAttribute("data-active", "");
+        ROOT.style.setProperty("--current-visible-row-index", index);
     }
 
     /**
      *
      * @param {object} tickData
      */
-    function doOnTick(tickData) {
-        console.log(tickData.detail);
+    function doOnTick(event) {
+        const tickData = event.detail;
+        //console.log(tickData);
+
+        // TODO: this shouldn't take into account preamble beats.
+        if (tickData.contextData.metronome.barsSinceStarted && tickData.contextData.metronome.newBarStarted &&
+            tickData.contextData.metronome.barsSinceStarted % barRepetitions == 0
+        ) {
+            ++currentActiveVisibleRowIndex;
+            // TODO: this is the wrong place for this, as it still lets the very first beat of the "next" bar to play.
+            if (currentActiveVisibleRowIndex >= currentVisibleRows.length) {
+                stopMetronome();
+            }
+            else {
+                setActiveVisibleRow(currentActiveVisibleRowIndex);
+            }
+        }
     }
 
     /**
@@ -324,9 +374,20 @@
             setAutoScrollEnabledAttr(autoScrollEnabled);
         });
 
+        REPETITIONS_INPUT.addEventListener("change", (event) => {
+            let val = parseInt(REPETITIONS_INPUT.value);
+            // TODO: no magics!
+            if (val <= 0) val = 1;
+            else if (val >= 8) val = 8;
+
+            barRepetitions = val;
+        })
+
         // TODO: add event listeners for keyboard inputs to change metronome
+        // TODO: add facility to load in last saved settings etc.
     }
 
+    // make functions available to DOM
     window.generateGrid = generateGrid;
     window.toggleMetronome = toggleMetronome;
 
