@@ -6,62 +6,76 @@
     </head>
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
-            <div class="control-panel">
-                <form id="generateControls" onsubmit="generateGrid(event)">
-                    <div>
-                        <label for="nValue">n</label>
-                        <input type="number" min="2" max="9" id="nValue" value="2">
+            <header class="screen-only">
+                <div class="control-panel container">
+                    <form id="generateControls" onsubmit="generateGrid(event)">
+                        <div>
+                            <label for="nValue">n</label>
+                            <input type="number" min="2" max="9" id="nValue" value="2">
+                        </div>
+                        <div>
+                            <button type="submit">Generate</button>
+                        </div>
+                    </form>
+                    <form id="metronomeControls" onsubmit="toggleMetronome(event)">
+                        <div>
+                            <label for="bpm">BPM</label>
+                            <input type="number" min="20" max="280" id="bpm" value="60">
+                        </div>
+                        <div>
+                            <label for="beatsPerBar">Time sig.</label>
+                            <input type="number" min="1" max="16" id="beatsPerBar" value="4">&nbsp;/&nbsp;4
+                        </div>
+                        <div>
+                            <button type="submit" id="metronomeToggleButton">Start</button>
+                        </div>
+                    </form>
+                    <form id="autoScrollControls" onsubmit="event.preventDefault()">
+                        <div>
+                            <input type="checkbox" id="enableAutoScroll">
+                            <label for="enableAutoScroll">Auto scroll</label>
+                        </div>
+                        <div>
+                            <label for="repetitions">Repetitions</label>
+                            <input type="number" min="1" max="8" id="repetitions" value="1">
+                        </div>
+                        <div>
+                            <label for="preambleBeats">Preamble Beats</label>
+                            <input type="number" min="0" max="16" id="preambleBeats" value="0">
+                        </div>
+                    </form>
+                    <form id="visualControls" onsubmit="event.preventDefault()">
+                        <div>
+                            <label for="cellHeight">Cell Height</label>
+                            <input type="number" min="2" max="6" id="cellHeight" value="3">
+                        </div>
+                        <div>
+                            <label for="rowGap">Row Gap</label>
+                            <input type="number" min="0" max="3" id="rowGap" value="0">
+                        </div>
+                        <div>
+                            <input type="checkbox" id="excludeFirstRow" checked="checked">
+                            <label for="excludeFirstRow">Hide first row</label>
+                        </div>
+                    </form>
+                </div>
+            </header>
+            <main class="print-visible">
+                <div class="render-area--wrapper container">
+                    <div id="renderArea"></div>
+                </div>
+            </main>
+            <footer class="print-visible">
+                <div class="footer--inner container">
+                    <div class="credits">
+                        <span class="screen-only">By <a href="https://github.com/elevorous">elevorous</a></span>
+                        <span class="print-only">elevorous.github.io</span>
                     </div>
-                    <div>
-                        <button type="submit">Generate</button>
+                    <div class="site-version">
+                        alpha-0.2
                     </div>
-                </form>
-                <form id="metronomeControls" onsubmit="toggleMetronome(event)">
-                    <div>
-                        <label for="bpm">BPM</label>
-                        <input type="number" min="20" max="280" id="bpm" value="60">
-                    </div>
-                    <div>
-                        <button type="submit" id="metronomeToggleButton">Start</button>
-                    </div>
-                </form>
-                <form id="autoScrollControls" onsubmit="event.preventDefault()">
-                    <div>
-                        <input type="checkbox" id="enableAutoScroll">
-                        <label for="enableAutoScroll">Auto scroll</label>
-                    </div>
-                    <div>
-                        <label for="repetitions">Repetitions</label>
-                        <input type="number" min="1" max="8" id="repetitions" value="1">
-                    </div>
-                    <!--
-                    <div>
-                        <label for="preambleBeats">Preamble Beats</label>
-                        <input type="number" min="0" max="32" id="preambleBeats" value="0">
-                    </div>
-                -->
-                </form>
-                <form id="visualControls" onsubmit="event.preventDefault()">
-                    <div>
-                        <label for="cellHeight">Cell Height</label>
-                        <input type="number" min="2" max="6" id="cellHeight" value="3">
-                    </div>
-                    <div>
-                        <label for="rowGap">Row Gap</label>
-                        <input type="number" min="0" max="3" id="rowGap" value="0">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="excludeFirstRow" checked="checked">
-                        <label for="excludeFirstRow">Hide first row</label>
-                    </div>
-                </form>
-            </div>
-            <div class="render-area--wrapper">
-                <div id="renderArea"></div>
-            </div>
-            <div class="credits">
-                By <a href="https://github.com/elevorous">elevorous</a>
-            </div>
+                </div>
+            </footer>
         </div>
         <!-- Scripts -->
         <script src="metronome.js" type="text/javascript"></script>

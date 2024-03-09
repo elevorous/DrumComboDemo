@@ -1,7 +1,24 @@
 :root {
-    --cell-height: 3em;
-    --row-gap: 0em;
+    --cell-height: 3rem;
+    --row-gap: 0rem;
     --current-visible-row-index: 0;
+}
+
+:root {
+    --spacing-small: 0.25rem;
+    --spacing-medium-small: 0.5rem;
+    --spacing-normal: 1rem;
+    --spacing-medium-large: 1.5rem;
+    --spacing-large: 2rem;
+    --spacing-huge: 4rem;
+}
+
+:root {
+    --breakpoint-tablet: 481px;
+    --breakpoint-laptop: 769px;
+    --breakpoint-desktop: 1025px;
+    --breakpoint-wide: 1201px;
+    --breakpoint-4k: 1401px;
 }
 
 * {
@@ -14,9 +31,30 @@
 
 body {
     background: powderblue;
-    padding: 2em;
     margin: 0;
     height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: calc(var(--breakpoint-4k) - 1px);
+    margin: 0 auto;
+}
+
+header, main, footer {
+    padding: 0 var(--spacing-normal);
+}
+
+main {
+    flex: 1;
+}
+
+.footer--inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: var(--spacing-normal) 0;
+    font-size: 0.9rem;
 }
 
 .page-content {
@@ -25,18 +63,14 @@ body {
     height: 100%;
 }
 
-.control-panel {
-    margin-bottom: 2em;
-    border: 1px solid darkgrey;
-}
-
 input {
     font-size: 1rem;
     margin: 0;
 }
 
 input[type="number"] {
-    padding: 0.4em 0.8em;
+    padding: 0.4rem 0.8rem;
+    width: 9ch;
 }
 
 .combination {
@@ -52,6 +86,7 @@ input[type="number"] {
 
 .control-panel {
     justify-content: space-between;
+    padding: var(--spacing-normal) 0;
 }
 
 .combination-wrapper:not(:last-child) {
@@ -75,13 +110,13 @@ input[type="number"] {
     -webkit-print-color-adjust: exact;
 }
 
-.render-area--wrapper, .control-panel {
+.render-area--wrapper {
     background: white;
     padding: 2em;
 }
 
 .render-area--wrapper {
-    flex: 1;
+    height: 100%;
     position: relative;
 }
 
@@ -128,8 +163,14 @@ body[data-auto-scroll-enabled="true"] [data-active] + .combination-wrapper {
     opacity: 0.5;
 }
 
+@media not print {
+    .print-only {
+        display: none !important;
+    }
+}
+
 @media print {
-    form {
-        display: none;
+    .screen-only {
+        display: none !important;
     }
 }

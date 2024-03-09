@@ -16,6 +16,8 @@
     const BODY = document.getElementsByTagName("body")[0];
     const AUTO_SCROLL_CHECKBOX = document.getElementById("enableAutoScroll");
     const REPETITIONS_INPUT = document.getElementById("repetitions");
+    const BEATS_PER_BAR_INPUT = document.getElementById("beatsPerBar");
+    const PREAMBLE_BEATS_INPUT = document.getElementById("preambleBeats");
 
     const ROOT = document.documentElement;
 
@@ -28,7 +30,7 @@
 
     let currentVal = null;
     let autoScrollEnabled = false;
-    let metronome = new CallbackMetronome(DEFAULT_BPM, doOnTick);
+    let metronome = new CallbackMetronome(DEFAULT_BPM);
     let currentVisibleRows = null;
     let barRepetitions = 1;
     let currentActiveVisibleRowIndex = 0;
@@ -60,7 +62,6 @@
 
         RENDER_AREA_DIV.innerHTML = HTML_CACHE[val];
         currentVal = val;
-        metronome.beatsPerBar = currentVal;
 
         toggleFirstRowVisibility();
     }
@@ -261,14 +262,20 @@
     function startMetronome() {
         METRONOME_TOGGLE_BUTTON.textContent = "Stop";
         setMetronomeRunningAttr(true);
-        autoScrollEnabled && startAutoScroll();
+        if (autoScrollEnabled) {
+            metronome.clickCallbackFn = doOnTick;
+            startAutoScroll();
+        }
         metronome.start();
     }
 
     function stopMetronome() {
         metronome.stop();
         METRONOME_TOGGLE_BUTTON.textContent = "Start";
-        autoScrollEnabled && stopAutoScroll();
+        if (autoScrollEnabled) {
+            metronome.clickCallbackFn = null;
+            stopAutoScroll();
+        }
         setMetronomeRunningAttr(false);
     }
 
@@ -378,10 +385,28 @@
             let val = parseInt(REPETITIONS_INPUT.value);
             // TODO: no magics!
             if (val <= 0) val = 1;
-            else if (val >= 8) val = 8;
+            else if (val > 8) val = 8;
 
             barRepetitions = val;
-        })
+        });
+
+        BEATS_PER_BAR_INPUT.addEventListener("change", (event) => {
+            let val = parseInt(BEATS_PER_BAR_INPUT.value);
+
+            if (val <= 0) val = 1;
+            else if (val > 16) val = 16;
+
+            metronome.beatsPerBar = val;
+        });
+
+        PREAMBLE_BEATS_INPUT.addEventListener("change", (event) => {
+            let val = parseInt(PREAMBLE_BEATS_INPUT.value);
+
+            if (val < 0) val = 0;
+            else if (val > 16) val = 16;
+
+            metronome.preambleBeats = val;
+        });
 
         // TODO: add event listeners for keyboard inputs to change metronome
         // TODO: add facility to load in last saved settings etc.
