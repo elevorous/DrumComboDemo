@@ -1,63 +1,18 @@
-/**
-*
-* @author elevorous
-*/
-class CallbackOscillatorNode extends OscillatorNode {
-
-    /**
-     * @constructor
-     * @param {AudioContext} context
-     * @param {object} options - optional
-     */
-    constructor(context, options) {
-        super(context, options);
-        this.contextData = options?.contextData || {};
-        // force our handler to refer to this CallbackOscillatorNode, rather than the
-        //  silent OscillatorNode which we are listening for the end of.
-        this.emitStartedEvent = this.emitStartedEvent.bind(this);
-    }
-
-    /**
-     * @return {undefined}
-     */
-    emitStartedEvent() {
-        const e = new CustomEvent("started", {
-            detail: {
-                frequency: this.frequency,
-                type: this.type,
-                detune: this.detune,
-                contextData: this.contextData
-            }
-        });
-        this.dispatchEvent(e);
-    }
-
-    /**
-     * @Override
-     *
-     * @param {int} when
-     * @return {undefined}
-     */
-    start(when) {
-        const startNode = this.context.createOscillator();
-        startNode.addEventListener("ended", this.emitStartedEvent);
-
-        startNode.connect(this.context.destination);
-        startNode.start(when);
-        startNode.stop(when);
-
-        super.start(when);
-    }
-
-}
+import { CallbackOscillatorNode } from "callback-oscillator-node";
 
 /**
-* An extension of Grant James' Metronome class, to allow for a callback to be
-*   registered on particular clicks.
+* Originally based off of Grant James' Metronome class
 *
-* @author elevorous
+* INCLUDE:
+*   <script type="module" src="scripts/site/module/callback-metronome.js"></script>
+*
+* USAGE:
+*   import CallbackMetronome from "callback-metronome";
+*
+* @see https://github.com/grantjames/metronome/tree/master
+* @author Grant James, elevorous
 */
-class CallbackMetronome extends Metronome {
+class CallbackMetronome {
 
     // the tone of an accent "click", in Hz
     static get ACCENT_TONE() {
@@ -82,11 +37,37 @@ class CallbackMetronome extends Metronome {
         return CallbackMetronome.CLICK_DURATION - 0.01;
     }
 
+    static get DEFAULT_TEMPO() {
+        return 120; // bpm
+    }
+
+    static get DEFAULT_LOOKAHEAD() {
+        return 25; // in milliseconds
+    }
+
+    static get DEFAULT_SCHEDULE_AHEAD_TIME() {
+        return 0.1;     //in seconds
+    }
+
+    static get DEFAULT_BEATS_PER_BAR() {
+        return 4;
+    }
+
     /**
      * @constructor
      */
-    constructor(tempo = 120, clickCallbackFn = null) {
-        super(tempo);
+    constructor(tempo = CallbackMetronome.DEFAULT_TEMPO, clickCallbackFn = null) {
+        this.audioContext = null;
+        // this.notesInQueue = [];         // notes that have been put into the web audio and may or may not have been played yet {note, time}
+        this.currentBeatInBar = 0;
+        this.beatsPerBar = CallbackMetronome.DEFAULT_BEATS_PER_BAR;
+        this.tempo = tempo;
+        this.lookahead = CallbackMetronome.DEFAULT_LOOKAHEAD;          // How frequently to call scheduling function (in milliseconds)
+        this.scheduleAheadTime = CallbackMetronome.DEFAULT_SCHEDULE_AHEAD_TIME;   // How far ahead to schedule audio (sec)
+        this.nextNoteTime = 0.0;     // when the next note is due
+        this.isRunning = false;
+        this.intervalID = null;
+
         this.clickCallbackFn = clickCallbackFn;
         this.beatsSinceStarted = 0;     // keep a running total of all beats that have been played
         this.preambleBeats = 0;
@@ -106,6 +87,21 @@ class CallbackMetronome extends Metronome {
      */
     get newBarStarted() {
         return this.beatsSinceStarted % this.beatsPerBar == 0;
+    }
+
+    /**
+     *
+     *
+     */
+    nextNote() {
+        // Advance current note and time by a quarter note (crotchet if you're posh)
+        var secondsPerBeat = 60.0 / this.tempo; // Notice this picks up the CURRENT tempo value to calculate beat length.
+        this.nextNoteTime += secondsPerBeat; // Add beat length to last beat time
+
+        this.currentBeatInBar++;    // Advance the beat number, wrap to zero
+        if (this.currentBeatInBar == this.beatsPerBar) {
+            this.currentBeatInBar = 0;
+        }
     }
 
     /**
@@ -162,17 +158,8 @@ class CallbackMetronome extends Metronome {
         oscillator.stop(time + CallbackMetronome.CLICK_DURATION);
     }
 
-    // stop() {
-    //     super.stop();
-    //     this.audioContext.suspend();
-    //     this.audioContext.close().then((function() {
-    //         this.audioContext = null;
-    //     }).bind(this));
-    // }
-
     /**
      *
-     * @Override
      */
     scheduler() {
         // while there are notes that will need to play before the next interval, schedule them and advance the pointer.
@@ -184,10 +171,48 @@ class CallbackMetronome extends Metronome {
     }
 
     /**
-     * @Override
+     *
+     *
      */
     start() {
+        if (this.isRunning) return;
+
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        const START_OFFSET = 0.05;  // in seconds
+
         this.beatsSinceStarted = 0;
-        super.start();
+        this.currentBeatInBar = 0;
+        this.nextNoteTime = this.audioContext.currentTime + START_OFFSET;
+
+        this.intervalID = setInterval(() => this.scheduler(), this.lookahead);
+
+        this.isRunning = true;
+    }
+
+    /**
+     *
+     *
+     */
+    stop() {
+        this.isRunning = false;
+        clearInterval(this.intervalID);
+    }
+
+    /**
+     *
+     *
+     */
+    startStop() {
+        if (this.isRunning) {
+            this.stop();
+        }
+        else {
+            this.start();
+        }
     }
 }
+
+export { CallbackMetronome };

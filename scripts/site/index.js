@@ -1,8 +1,9 @@
+import { CallbackMetronome } from "callback-metronome";
+
 /**
 *
 * @author elevorous
 */
-
 (function() {
     'use strict';
 

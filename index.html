@@ -2,7 +2,17 @@
 <html>
     <head>
         <title>Drum Combo Demo</title>
-        <link href="index.css" rel="stylesheet" type="text/css"></link>
+        <link href="stylesheets/index.css" rel="stylesheet" type="text/css"></link>
+        <script type="importmap">
+            {
+                "imports": {
+                    "callback-oscillator-node": "./scripts/site/module/callback-oscillator-node.js",
+                    "callback-metronome": "./scripts/site/module/callback-metronome.js"
+                }
+            }
+        </script>
+        <script type="module" src="./scripts/site/module/callback-oscillator-node.js"></script>
+        <script type="module" src="./scripts/site/module/callback-metronome.js"></script>
     </head>
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
@@ -78,8 +88,6 @@
             </footer>
         </div>
         <!-- Scripts -->
-        <script src="metronome.js" type="text/javascript"></script>
-        <script src="callback-metronome.js" type="text/javascript"></script>
-        <script src="index.js" type="text/javascript"></script>
+        <script src="scripts/site/index.js" type="module"></script>
     </body>
 </html>
