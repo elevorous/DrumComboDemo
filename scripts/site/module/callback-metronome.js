@@ -7,7 +7,7 @@ import { CallbackOscillatorNode } from "callback-oscillator-node";
 *   <script type="module" src="scripts/site/module/callback-metronome.js"></script>
 *
 * USAGE:
-*   import CallbackMetronome from "callback-metronome";
+*   import { CallbackMetronome } from "callback-metronome";
 *
 * @see https://github.com/grantjames/metronome/tree/master
 * @author Grant James, elevorous

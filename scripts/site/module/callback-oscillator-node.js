@@ -6,7 +6,7 @@
 *   <script type="module" src="scripts/site/module/callback-oscillator-node.js"></script>
 *
 * USAGE:
-*   import CallbackOscillatorNode from "callback-oscillator-node";
+*   import { CallbackOscillatorNode } from "callback-oscillator-node";
 *
 * @see https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode
 * @author elevorous
