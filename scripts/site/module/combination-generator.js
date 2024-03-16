@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * INCLUDE:
 *   <script type="module" src="scripts/site/module/combination-generator.js"></script>
@@ -7,7 +9,6 @@
 *
 * @author elevorous
 */
-
 
 /**
 * A static service class for generating combinations of 1s and 0s, and sorting them to a very particular criteria

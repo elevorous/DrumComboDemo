@@ -20,6 +20,7 @@ import { CombinationGeneratorService } from "combination-generator";
     const REPETITIONS_INPUT = document.getElementById("repetitions");
     const BEATS_PER_BAR_INPUT = document.getElementById("beatsPerBar");
     const PREAMBLE_BEATS_INPUT = document.getElementById("preambleBeats");
+    const PREAMBLE_CHECKBOX = document.getElementById("enablePreamble");
 
     const ROOT = document.documentElement;
 
@@ -245,6 +246,10 @@ import { CombinationGeneratorService } from "combination-generator";
             else if (val > 16) val = 16;
 
             metronome.preambleBeats = val;
+        });
+
+        PREAMBLE_CHECKBOX.addEventListener("change", (event) => {
+            metronome.preambleEnabled = PREAMBLE_CHECKBOX.checked;
         });
 
         // TODO: add event listeners for keyboard inputs to change metronome

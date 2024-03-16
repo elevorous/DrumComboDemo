@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * An extension of the JavaScript OscillatorNode, with added functionality to emit a "started" event (as a complement
 *   to the "ended" event)

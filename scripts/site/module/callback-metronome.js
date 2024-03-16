@@ -1,5 +1,7 @@
 import { CallbackOscillatorNode } from "callback-oscillator-node";
 
+'use strict';
+
 /**
 * Originally based off of Grant James' Metronome class
 *
@@ -14,21 +16,22 @@ import { CallbackOscillatorNode } from "callback-oscillator-node";
 */
 class CallbackMetronome {
 
-    // the tone of an accent "click", in Hz
+    /** @return {int} - the tone of an accent "click", in Hz */
     static get ACCENT_TONE() {
         return 1000;
     }
 
-    // the tone of a regular "click", in Hz
+    /** @return {int} - the tone of a regular "click", in Hz */
     static get TONE() {
         return 800;
     }
 
+    /** @return {int} - the tone of a preamble "click", in Hz */
     static get PREAMBLE_TONE() {
         return 600;
     }
 
-    // the audible duration of one "click", in seconds
+    /** @return {int} - the audible duration of one "click", in seconds */
     static get CLICK_DURATION() {
         return 0.03;
     }
@@ -37,20 +40,47 @@ class CallbackMetronome {
         return CallbackMetronome.CLICK_DURATION - 0.01;
     }
 
+    /** @return {int} - the number of beats per minute */
     static get DEFAULT_TEMPO() {
-        return 120; // bpm
+        return 120;
     }
 
+    /**
+     * @return {int} - the millisecond duration within which we will check to see if a new note needs to be scheduled
+     */
     static get DEFAULT_LOOKAHEAD() {
-        return 25; // in milliseconds
+        return 25;
     }
 
     static get DEFAULT_SCHEDULE_AHEAD_TIME() {
         return 0.1;     //in seconds
     }
 
+    /** @return {int} */
     static get DEFAULT_BEATS_PER_BAR() {
         return 4;
+    }
+
+    /** @return {int} - the number of preamble beats to play before true "clicks" start. Preamble beats do not count
+     *                      towards `this.beatsSinceStarted`, or `this.barsSinceStarted` */
+    static get DEFAULT_PREAMBLE_BEATS() {
+        return 0;
+    }
+
+    /** @return {int} - signifies that this metronome isn't running, and so has no valid preamble state, or the preamble
+     *                          is disabled */
+    static get PREAMBLE_STATE__INVALID() {
+        return -1;
+    }
+
+    /** @return {int} - signifies that this currently running metronome is playing its preamble */
+    static get PREAMBLE_STATE__STARTED() {
+        return 0;
+    }
+
+    /** @return {int} - signifies that this currently running metronome has finished playing its preamble */
+    static get PREAMBLE_STATE__ENDED() {
+        return 1;
     }
 
     /**
@@ -69,8 +99,17 @@ class CallbackMetronome {
         this.intervalID = null;
 
         this.clickCallbackFn = clickCallbackFn;
-        this.beatsSinceStarted = 0;     // keep a running total of all beats that have been played
-        this.preambleBeats = 0;
+        this.totalBeatsSinceStarted = 0;     // keep a running total of all beats that have been played
+        this.preambleBeats = CallbackMetronome.DEFAULT_PREAMBLE_BEATS;
+        this.preambleEnabled = false;
+    }
+
+    /**
+     * @getter
+     * @return {int} - the number of non-preamble beats which have occurred since the metronome started
+     */
+    get beatsSinceStarted() {
+        return Math.max(this.totalBeatsSinceStarted - this.preambleBeats, 0);
     }
 
     /**
@@ -87,6 +126,27 @@ class CallbackMetronome {
      */
     get newBarStarted() {
         return this.beatsSinceStarted % this.beatsPerBar == 0;
+    }
+
+    /**
+     * @getter
+     * @return {boolean} - true if this metronome is configured to play some amount of preamble beats
+     */
+    get hasPreamble() {
+        return this.preambleEnabled && this.preambleBeats;
+    }
+
+    /**
+     * @getter
+     * @return {int} - the current preamble state of this metronome
+     */
+    get preambleState() {
+        if (this.isRunning && this.hasPreamble) {
+            return (this.totalBeatsSinceStarted - this.preambleBeats) < 0 ?
+                    CallbackMetronome.PREAMBLE_STATE__STARTED : CallbackMetronome.PREAMBLE_STATE__ENDED;
+        }
+
+        return CallbackMetronome.PREAMBLE_STATE__INVALID;
     }
 
     /**
@@ -115,7 +175,7 @@ class CallbackMetronome {
             osc.addEventListener("started", this.clickCallbackFn);
         }
 
-        osc.addEventListener("ended", (e) => this.beatsSinceStarted++);
+        osc.addEventListener("ended", (e) => this.totalBeatsSinceStarted++);
 
         return osc;
     }
@@ -145,7 +205,14 @@ class CallbackMetronome {
         //masterVolume.gain.value = 1;
 
 
-        oscillator.frequency.value = (!beatNumber) ? CallbackMetronome.ACCENT_TONE : CallbackMetronome.TONE;
+        if (this.preambleState === CallbackMetronome.PREAMBLE_STATE__STARTED) {
+            oscillator.frequency.value = CallbackMetronome.PREAMBLE_TONE;
+            oscillator.type = "triangle";
+        }
+        else {
+            oscillator.frequency.value = this.newBarStarted ? CallbackMetronome.ACCENT_TONE : CallbackMetronome.TONE;
+        }
+
         envelope.gain.value = 1;
         envelope.gain.exponentialRampToValueAtTime(1, time + 0.001);
         envelope.gain.exponentialRampToValueAtTime(0.001, time + CallbackMetronome.CLICK_GAIN_DROPOFF_DURATION);
@@ -183,7 +250,7 @@ class CallbackMetronome {
 
         const START_OFFSET = 0.05;  // in seconds
 
-        this.beatsSinceStarted = 0;
+        this.totalBeatsSinceStarted = 0;
         this.currentBeatInBar = 0;
         this.nextNoteTime = this.audioContext.currentTime + START_OFFSET;
 
