@@ -1,0 +1,24 @@
+
+@mixin screen-only() {
+    @media not print {
+        @content;
+    }
+}
+
+@mixin print-only() {
+    @media print {
+        @content;
+    }
+}
+
+@include screen-only() {
+    .u-print-only {
+        display: none !important;
+    }
+}
+
+@include print-only() {
+    .u-screen-only {
+        display: none !important;
+    }
+}
