@@ -163,6 +163,33 @@ body[data-auto-scroll-enabled="true"] [data-active] + .combination-wrapper {
     opacity: 0.5;
 }
 
+.control-panel__panel {
+    display: flex;
+    flex: 0 1 auto;
+    overflow: hidden;
+    align-items: center;
+    transition: flex 0.3s;
+}
+
+.control-panel__panel.active {
+    flex-grow: 1;
+}
+
+.control-panel__panel-toggle {
+    flex: 0 0 auto;
+}
+
+.control-panel__panel-content {
+    flex: 0 1 auto;
+    overflow: hidden;
+    width: 0;
+}
+
+.control-panel__panel.active .control-panel__panel-content {
+    width: 100%;
+}
+
+
 @media not print {
     .print-only {
         display: none !important;

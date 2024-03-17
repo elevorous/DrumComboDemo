@@ -22,46 +22,72 @@
         <div class="page-content">
             <header class="screen-only">
                 <div class="control-panel container">
-                    <form id="generateControls" onsubmit="generateGrid(event)">
-                        <div>
-                            <label for="nValue">n</label>
-                            <input type="number" min="2" max="9" id="nValue" value="2">
+                    <div class="control-panel__panel">
+                        <div class="control-panel__panel-toggle">
+                            <button type="button">Grid</button>
                         </div>
-                        <div>
-                            <button type="submit">Generate</button>
+                        <div class="control-panel__panel-content">
+                            <form id="generateControls" onsubmit="generateGrid(event)">
+                                <div>
+                                    <label for="nValue">n</label>
+                                    <input type="number" min="2" max="9" id="nValue" value="2">
+                                </div>
+                                <div>
+                                    <button type="submit">Generate</button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                    <form id="metronomeControls" onsubmit="toggleMetronome(event)">
-                        <div>
-                            <label for="bpm">BPM</label>
-                            <input type="number" min="20" max="280" id="bpm" value="60">
+                    </div>
+                    <div class="control-panel__panel">
+                        <div class="control-panel__panel-toggle">
+                            <button type="button">Metronome</button>
                         </div>
-                        <div>
-                            <label for="beatsPerBar">Time sig.</label>
-                            <input type="number" min="1" max="16" id="beatsPerBar" value="4">&nbsp;/&nbsp;4
+                        <div class="control-panel__panel-content">
+                            <form id="metronomeControls" onsubmit="toggleMetronome(event)">
+                                <div>
+                                    <label for="bpm">BPM</label>
+                                    <input type="number" min="20" max="280" id="bpm" value="60">
+                                </div>
+                                <div>
+                                    <label for="beatsPerBar">Time sig.</label>
+                                    <input type="number" min="1" max="16" id="beatsPerBar" value="4">&nbsp;/&nbsp;4
+                                </div>
+                                <div>
+                                    <button type="submit" id="metronomeToggleButton">Start</button>
+                                </div>
+                            </form>
                         </div>
-                        <div>
-                            <button type="submit" id="metronomeToggleButton">Start</button>
+                    </div>
+                    <div class="control-panel__panel">
+                        <div class="control-panel__panel-toggle">
+                            <button type="button">Autoscroll</button>
                         </div>
-                    </form>
-                    <form id="autoScrollControls" onsubmit="event.preventDefault()">
-                        <div>
-                            <input type="checkbox" id="enableAutoScroll">
-                            <label for="enableAutoScroll">Auto scroll</label>
+                        <div class="control-panel__panel-content">
+                            <form id="autoScrollControls" onsubmit="event.preventDefault()">
+                                <div>
+                                    <input type="checkbox" id="enableAutoScroll">
+                                    <label for="enableAutoScroll">Auto scroll</label>
+                                </div>
+                                <div>
+                                    <label for="repetitions">Repetitions</label>
+                                    <input type="number" min="1" max="8" id="repetitions" value="1">
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="enablePreamble">
+                                    <label for="enablePreamble">Enable Preamble</label>
+                                </div>
+                                <div>
+                                    <label for="preambleBeats">Preamble Beats</label>
+                                    <input type="number" min="0" max="16" id="preambleBeats" value="0">
+                                </div>
+                            </form>
                         </div>
-                        <div>
-                            <label for="repetitions">Repetitions</label>
-                            <input type="number" min="1" max="8" id="repetitions" value="1">
-                        </div>
-                        <div>
-                            <input type="checkbox" id="enablePreamble">
-                            <label for="enablePreamble">Enable Preamble</label>
-                        </div>
-                        <div>
-                            <label for="preambleBeats">Preamble Beats</label>
-                            <input type="number" min="0" max="16" id="preambleBeats" value="0">
-                        </div>
-                    </form>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" onclick="toggleMoreMenu(event)">More</button>
+                </div>
+                <div id="moreMenu">
                     <form id="visualControls" onsubmit="event.preventDefault()">
                         <div>
                             <label for="cellHeight">Cell Height</label>
