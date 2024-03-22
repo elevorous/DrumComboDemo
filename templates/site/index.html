@@ -112,23 +112,7 @@
             </footer>
         </div>
         <!-- Petite-vue Component includes -->
-        <!--
-        @see /scripts/site/petite-vue/generate-grid-form.js
-        
-        @author elevorous
-        -->
-        <template id="generate-grid-form-template">
-            <form id="generate-grid-form" v-on:submit.prevent="generateGrid">
-                <div>
-                    <label for="nValue">n</label>
-                    <input type="number" id="nValue" v-model="nValue" :min="minNValue" :max="maxNValue">
-                </div>
-                <div>
-                    <button type="submit">Generate</button>
-                </div>
-            </form>
-        </template>
-        
+        <!-- @include ./petite-vue/generate-grid-form.html -->
         <!-- Scripts -->
         <script src="scripts/site/index.js" type="module"></script>
     </body>

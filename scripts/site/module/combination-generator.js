@@ -1,5 +1,3 @@
-'use strict';
-
 /**
 * INCLUDE:
 *   <script type="module" src="scripts/site/module/combination-generator.js"></script>
@@ -9,6 +7,8 @@
 *
 * @author elevorous
 */
+
+'use strict';
 
 /**
 * A static service class for generating combinations of 1s and 0s, and sorting them to a very particular criteria
@@ -43,7 +43,8 @@ class CombinationGeneratorService {
     static getLowestUnsplittableFactor(value) {
         if (value <= 2) return 1;
         if (value % 2 == 1) return value;
-        return getLowestUnsplittableFactor(value / 2);
+        // Interesting that `this` is still needed for a static: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static#calling_static_members_from_another_static_method
+        return this.getLowestUnsplittableFactor(value / 2);
     }
 
     /**

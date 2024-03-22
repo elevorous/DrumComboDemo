@@ -163,6 +163,7 @@ body[data-auto-scroll-enabled="true"] [data-active] + .combination-wrapper {
     opacity: 0.5;
 }
 
+/*
 .control-panel__panel {
     display: flex;
     flex: 0 1 auto;
@@ -188,6 +189,7 @@ body[data-auto-scroll-enabled="true"] [data-active] + .combination-wrapper {
 .control-panel__panel.active .control-panel__panel-content {
     width: 100%;
 }
+*/
 
 
 @media not print {

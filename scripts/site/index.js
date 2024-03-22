@@ -1,5 +1,6 @@
 import { CallbackMetronome } from "callback-metronome";
-import { CombinationGeneratorService } from "combination-generator";
+import { createApp } from "petite-vue-pro";
+import { GenerateGridForm } from "generate-grid-form";
 
 /**
 *
@@ -8,10 +9,10 @@ import { CombinationGeneratorService } from "combination-generator";
 (function() {
     'use strict';
 
-    const N_VALUE_INPUT = document.getElementById("nValue");
+    // const N_VALUE_INPUT = document.getElementById("nValue");
     const ROW_GAP_INPUT = document.getElementById("rowGap");
     const CELL_HEIGHT_INPUT = document.getElementById("cellHeight");
-    const RENDER_AREA_DIV = document.getElementById("renderArea");
+    // const RENDER_AREA_DIV = document.getElementById("renderArea");
     const EXCLUDE_FIRST_ROW_CHECKBOX = document.getElementById("excludeFirstRow");
     const BPM_INPUT = document.getElementById("bpm");
     const METRONOME_TOGGLE_BUTTON = document.getElementById("metronomeToggleButton");
@@ -31,7 +32,7 @@ import { CombinationGeneratorService } from "combination-generator";
 
     const HTML_CACHE = {};
 
-    let currentVal = null;
+    // let currentVal = null;
     let autoScrollEnabled = false;
     let metronome = new CallbackMetronome(DEFAULT_BPM);
     let currentVisibleRows = null;
@@ -46,43 +47,6 @@ import { CombinationGeneratorService } from "combination-generator";
         BODY.setAttribute("data-metronome-running", value);
     }
 
-    /**
-    * @param {object} event - the onsubmit event
-    */
-    function generateGrid(event) {
-        event.preventDefault();
-        const val = parseInt(N_VALUE_INPUT.value);
-
-        // do nothing, we're already showing the correct grid
-        if (currentVal === val) return;
-
-        // if we don't have this generated HTML in the cache, create it
-        if (!HTML_CACHE[val]) {
-            let combinations = CombinationGeneratorService.generateCombinations(val);
-            combinations = CombinationGeneratorService.sortCombinations(combinations);
-            HTML_CACHE[val] = combinations.map((combo, i) => createCombinationHTML(combo, i)).join('');
-        }
-
-        RENDER_AREA_DIV.innerHTML = HTML_CACHE[val];
-        currentVal = val;
-
-        toggleFirstRowVisibility();
-    }
-
-    /**
-    * @param {string} combination - a string value of a binary representation of a number
-    * @param {int} index - the numeric index to mark this combination as
-    * @return {string} - the string output for a HTML structure representing the given combination
-    */
-    function createCombinationHTML(combination, index) {
-        const n = combination.length;
-        return  `<div class="combination-wrapper">
-                    <div>${index}</div>
-                    <div class="combination" data-value="${combination}">
-                        ${[...combination].map(i => `<div data-bit="${i}"></div>`).join('')}
-                    </div>
-                </div>`;
-    }
 
     /**
     * Start/stop the metronome
@@ -254,10 +218,13 @@ import { CombinationGeneratorService } from "combination-generator";
 
         // TODO: add event listeners for keyboard inputs to change metronome
         // TODO: add facility to load in last saved settings etc.
+        //
+        createApp({
+            GenerateGridForm
+        }).mount();
     }
 
     // make functions available to DOM
-    window.generateGrid = generateGrid;
     window.toggleMetronome = toggleMetronome;
 
     initialize();
