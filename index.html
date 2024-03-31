@@ -15,6 +15,7 @@
                     "petite-vue-pro": "./scripts/vendor/petite-vue-pro@0.4.6.js",
                     "component.generate-grid-form": "./scripts/site/petite-vue/component.generate-grid-form.js",
                     "component.metronome-form": "./scripts/site/petite-vue/component.metronome-form.js",
+                    "component.autoscroll-form": "./scripts/site/petite-vue/component.autoscroll-form.js",
                     "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js"
                 }
             }
@@ -96,6 +97,32 @@
                 </div>
                 <div>
                     <button type="submit">{{ metronome.isRunning ? "Stop" : "Start" }}</button>
+                </div>
+            </form>
+        </template>
+        
+        <!--
+        @see /scripts/site/petite-vue/component.autoscroll-form.js
+        
+        @author elevorous
+        -->
+        <template id="autoscroll-form-component-template">
+            <form id="autoscroll-form" v-on:submit.prevent>
+                <div>
+                    <input type="checkbox" id="enableAutoScroll" v-model="enableAutoScroll">
+                    <label for="enableAutoScroll">Auto scroll</label>
+                </div>
+                <div>
+                    <label for="repetitions">Repetitions</label>
+                    <input type="number" id="repetitions" v-model="repetitions" :min="MIN_REPETITIONS" :max="MAX_REPETITIONS">
+                </div>
+                <div>
+                    <input type="checkbox" id="enablePreamble" v-model="enablePreamble">
+                    <label for="enablePreamble">Enable Preamble</label>
+                </div>
+                <div>
+                    <label for="preambleBeats">Preamble Beats</label>
+                    <input type="number" id="preambleBeats" v-model="preambleBeats" :min="MIN_PREAMBLE_BEATS" :max="MAX_PREAMBLE_BEATS">
                 </div>
             </form>
         </template>
