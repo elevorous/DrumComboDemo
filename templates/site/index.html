@@ -13,7 +13,9 @@
                     "callback-metronome": "./scripts/site/module/callback-metronome.js",
                     "combination-generator": "./scripts/site/module/combination-generator.js",
                     "petite-vue-pro": "./scripts/vendor/petite-vue-pro@0.4.6.js",
-                    "generate-grid-form": "./scripts/site/petite-vue/generate-grid-form.js"
+                    "component.generate-grid-form": "./scripts/site/petite-vue/component.generate-grid-form.js",
+                    "component.metronome-form": "./scripts/site/petite-vue/component.metronome-form.js",
+                    "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js"
                 }
             }
         </script>
@@ -21,59 +23,7 @@
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
             <header class="screen-only">
-                <div class="control-panel container">
-                    <div class="control-panel__panel">
-                        <div class="control-panel__panel-toggle">
-                            <button type="button">Grid</button>
-                        </div>
-                        <div class="control-panel__panel-content" v-scope="GenerateGridForm()"></div>
-                    </div>
-                    <div class="control-panel__panel">
-                        <div class="control-panel__panel-toggle">
-                            <button type="button">Metronome</button>
-                        </div>
-                        <div class="control-panel__panel-content">
-                            <form id="metronomeControls" onsubmit="toggleMetronome(event)">
-                                <div>
-                                    <label for="bpm">BPM</label>
-                                    <input type="number" min="20" max="280" id="bpm" value="60">
-                                </div>
-                                <div>
-                                    <label for="beatsPerBar">Time sig.</label>
-                                    <input type="number" min="1" max="16" id="beatsPerBar" value="4">&nbsp;/&nbsp;4
-                                </div>
-                                <div>
-                                    <button type="submit" id="metronomeToggleButton">Start</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="control-panel__panel">
-                        <div class="control-panel__panel-toggle">
-                            <button type="button">Autoscroll</button>
-                        </div>
-                        <div class="control-panel__panel-content">
-                            <form id="autoScrollControls" onsubmit="event.preventDefault()">
-                                <div>
-                                    <input type="checkbox" id="enableAutoScroll">
-                                    <label for="enableAutoScroll">Auto scroll</label>
-                                </div>
-                                <div>
-                                    <label for="repetitions">Repetitions</label>
-                                    <input type="number" min="1" max="8" id="repetitions" value="1">
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="enablePreamble">
-                                    <label for="enablePreamble">Enable Preamble</label>
-                                </div>
-                                <div>
-                                    <label for="preambleBeats">Preamble Beats</label>
-                                    <input type="number" min="0" max="16" id="preambleBeats" value="0">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <div class="controlpanel" v-scope="controlPanelInstance"></div>
                 <div>
                     <button type="button" onclick="toggleMoreMenu(event)">More</button>
                 </div>
@@ -113,6 +63,8 @@
         </div>
         <!-- Petite-vue Component includes -->
         <!-- @include ./petite-vue/generate-grid-form.html -->
+        <!-- @include ./petite-vue/metronome-form.html -->
+        <!-- @include ./petite-vue/control-panel.html -->
         <!-- Scripts -->
         <script src="scripts/site/index.js" type="module"></script>
     </body>

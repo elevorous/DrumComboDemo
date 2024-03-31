@@ -1,6 +1,8 @@
-import { CallbackMetronome } from "callback-metronome";
+//import { CallbackMetronome } from "callback-metronome";
 import { createApp } from "petite-vue-pro";
-import { GenerateGridForm } from "generate-grid-form";
+import { GenerateGridFormComponent } from "component.generate-grid-form";
+import { ControlPanelComponent } from "component.control-panel";
+import { MetronomeFormComponent } from "component.metronome-form";
 
 /**
 *
@@ -34,53 +36,13 @@ import { GenerateGridForm } from "generate-grid-form";
 
     // let currentVal = null;
     let autoScrollEnabled = false;
-    let metronome = new CallbackMetronome(DEFAULT_BPM);
+    //let metronome = new CallbackMetronome(DEFAULT_BPM);
     let currentVisibleRows = null;
     let barRepetitions = 1;
     let currentActiveVisibleRowIndex = 0;
 
     function setAutoScrollEnabledAttr(value) {
         BODY.setAttribute("data-auto-scroll-enabled", value);
-    }
-
-    function setMetronomeRunningAttr(value) {
-        BODY.setAttribute("data-metronome-running", value);
-    }
-
-
-    /**
-    * Start/stop the metronome
-    * @return {undefined}
-    */
-    function toggleMetronome(event) {
-        event.preventDefault();
-
-        if (metronome.isRunning) {
-            stopMetronome();
-        }
-        else {
-            startMetronome();
-        }
-    }
-
-    function startMetronome() {
-        METRONOME_TOGGLE_BUTTON.textContent = "Stop";
-        setMetronomeRunningAttr(true);
-        if (autoScrollEnabled) {
-            metronome.clickCallbackFn = doOnTick;
-            startAutoScroll();
-        }
-        metronome.start();
-    }
-
-    function stopMetronome() {
-        metronome.stop();
-        METRONOME_TOGGLE_BUTTON.textContent = "Start";
-        if (autoScrollEnabled) {
-            metronome.clickCallbackFn = null;
-            stopAutoScroll();
-        }
-        setMetronomeRunningAttr(false);
     }
 
     /**
@@ -171,14 +133,7 @@ import { GenerateGridForm } from "generate-grid-form";
             toggleFirstRowVisibility();
         });
 
-        BPM_INPUT.addEventListener("change", (event) => {
-            // not a great deal of validation. but this is just a simple tool, so w/e
-            let bpmValue = parseInt(BPM_INPUT.value);
-            if (bpmValue < MIN_BPM) bpmValue = MIN_BPM;
-            else if (bpmValue > MAX_BPM) bpmValue = MAX_BPM;
-
-            metronome.tempo = bpmValue;
-        });
+        /*
 
         AUTO_SCROLL_CHECKBOX.addEventListener("change", (event) => {
             autoScrollEnabled = AUTO_SCROLL_CHECKBOX.checked;
@@ -194,15 +149,6 @@ import { GenerateGridForm } from "generate-grid-form";
             barRepetitions = val;
         });
 
-        BEATS_PER_BAR_INPUT.addEventListener("change", (event) => {
-            let val = parseInt(BEATS_PER_BAR_INPUT.value);
-
-            if (val <= 0) val = 1;
-            else if (val > 16) val = 16;
-
-            metronome.beatsPerBar = val;
-        });
-
         PREAMBLE_BEATS_INPUT.addEventListener("change", (event) => {
             let val = parseInt(PREAMBLE_BEATS_INPUT.value);
 
@@ -215,17 +161,39 @@ import { GenerateGridForm } from "generate-grid-form";
         PREAMBLE_CHECKBOX.addEventListener("change", (event) => {
             metronome.preambleEnabled = PREAMBLE_CHECKBOX.checked;
         });
+        */
+
+        const gridFormInstance = GenerateGridFormComponent();
+        const metronomeFormInstance = MetronomeFormComponent();
+
+        // TODO: Component-ize the other forms and add them to this.
+        const controlPanelComponents = [
+            {
+                clazz: gridFormInstance,
+                name: 'Grid',
+                icon: ''
+            },
+            {
+                clazz: metronomeFormInstance,
+                name: 'Metronome',
+                icon: ''
+            }
+        ];
+
+        const controlPanelInstance = ControlPanelComponent({
+            controlPanelComponents: controlPanelComponents
+        });
+
 
         // TODO: add event listeners for keyboard inputs to change metronome
         // TODO: add facility to load in last saved settings etc.
         //
         createApp({
-            GenerateGridForm
+            get controlPanelInstance() {
+                return controlPanelInstance
+            }
         }).mount();
     }
-
-    // make functions available to DOM
-    window.toggleMetronome = toggleMetronome;
 
     initialize();
 })();

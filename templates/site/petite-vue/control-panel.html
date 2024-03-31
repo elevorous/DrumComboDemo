@@ -1,0 +1,72 @@
+<!--
+@see /scripts/site/petite-vue/component.control-panel.js
+
+@author elevorous
+-->
+<template id="control-panel-component-template">
+    <div class="control-panel container" v-for="controlForm in controlPanelComponents">
+        <div class="control-panel__panel">
+            <div class="control-panel__panel-toggle">
+                <button type="button">{{ controlForm.name }}</button>
+            </div>
+            <div class="control-panel__panel-content" v-scope="controlForm.clazz"></div>
+        </div>
+    </div>
+</template>
+
+<!--
+<template id="control-panel-template">
+    <div class="control-panel container">
+        <div class="control-panel__panel">
+            <div class="control-panel__panel-toggle">
+                <button type="button">Grid</button>
+            </div>
+            <div class="control-panel__panel-content" v-scope="GenerateGridForm()"></div>
+        </div>
+        <div class="control-panel__panel">
+            <div class="control-panel__panel-toggle">
+                <button type="button">Metronome</button>
+            </div>
+            <div class="control-panel__panel-content">
+                <form id="metronomeControls" onsubmit="toggleMetronome(event)">
+                    <div>
+                        <label for="bpm">BPM</label>
+                        <input type="number" min="20" max="280" id="bpm" value="60">
+                    </div>
+                    <div>
+                        <label for="beatsPerBar">Time sig.</label>
+                        <input type="number" min="1" max="16" id="beatsPerBar" value="4">&nbsp;/&nbsp;4
+                    </div>
+                    <div>
+                        <button type="submit" id="metronomeToggleButton">Start</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="control-panel__panel">
+            <div class="control-panel__panel-toggle">
+                <button type="button">Autoscroll</button>
+            </div>
+            <div class="control-panel__panel-content">
+                <form id="autoScrollControls" onsubmit="event.preventDefault()">
+                    <div>
+                        <input type="checkbox" id="enableAutoScroll">
+                        <label for="enableAutoScroll">Auto scroll</label>
+                    </div>
+                    <div>
+                        <label for="repetitions">Repetitions</label>
+                        <input type="number" min="1" max="8" id="repetitions" value="1">
+                    </div>
+                    <div>
+                        <input type="checkbox" id="enablePreamble">
+                        <label for="enablePreamble">Enable Preamble</label>
+                    </div>
+                    <div>
+                        <label for="preambleBeats">Preamble Beats</label>
+                        <input type="number" min="0" max="16" id="preambleBeats" value="0">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template> -->
