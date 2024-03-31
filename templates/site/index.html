@@ -9,6 +9,7 @@
         <script type="importmap">
             {
                 "imports": {
+                    "site-utils": "./scripts/site/module/site-utils.js",
                     "callback-oscillator-node": "./scripts/site/module/callback-oscillator-node.js",
                     "callback-metronome": "./scripts/site/module/callback-metronome.js",
                     "combination-generator": "./scripts/site/module/combination-generator.js",
@@ -16,6 +17,7 @@
                     "component.generate-grid-form": "./scripts/site/petite-vue/component.generate-grid-form.js",
                     "component.metronome-form": "./scripts/site/petite-vue/component.metronome-form.js",
                     "component.autoscroll-form": "./scripts/site/petite-vue/component.autoscroll-form.js",
+                    "component.view-options-form": "./scripts/site/petite-vue/component.view-options-form.js",
                     "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js"
                 }
             }
@@ -29,20 +31,7 @@
                     <button type="button" onclick="toggleMoreMenu(event)">More</button>
                 </div>
                 <div id="moreMenu">
-                    <form id="visualControls" onsubmit="event.preventDefault()">
-                        <div>
-                            <label for="cellHeight">Cell Height</label>
-                            <input type="number" min="2" max="6" id="cellHeight" value="3">
-                        </div>
-                        <div>
-                            <label for="rowGap">Row Gap</label>
-                            <input type="number" min="0" max="3" id="rowGap" value="0">
-                        </div>
-                        <div>
-                            <input type="checkbox" id="excludeFirstRow" checked="checked">
-                            <label for="excludeFirstRow">Hide first row</label>
-                        </div>
-                    </form>
+                    <div v-scope="viewOptionsFormInstance"></div>
                 </div>
             </header>
             <main class="print-visible">
@@ -66,6 +55,7 @@
         <!-- @include ./petite-vue/generate-grid-form.html -->
         <!-- @include ./petite-vue/metronome-form.html -->
         <!-- @include ./petite-vue/autoscroll-form.html -->
+        <!-- @include ./petite-vue/view-options-form.html -->
         <!-- @include ./petite-vue/control-panel.html -->
         <!-- Scripts -->
         <script src="scripts/site/index.js" type="module"></script>

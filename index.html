@@ -9,6 +9,7 @@
         <script type="importmap">
             {
                 "imports": {
+                    "site-utils": "./scripts/site/module/site-utils.js",
                     "callback-oscillator-node": "./scripts/site/module/callback-oscillator-node.js",
                     "callback-metronome": "./scripts/site/module/callback-metronome.js",
                     "combination-generator": "./scripts/site/module/combination-generator.js",
@@ -16,6 +17,7 @@
                     "component.generate-grid-form": "./scripts/site/petite-vue/component.generate-grid-form.js",
                     "component.metronome-form": "./scripts/site/petite-vue/component.metronome-form.js",
                     "component.autoscroll-form": "./scripts/site/petite-vue/component.autoscroll-form.js",
+                    "component.view-options-form": "./scripts/site/petite-vue/component.view-options-form.js",
                     "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js"
                 }
             }
@@ -29,20 +31,7 @@
                     <button type="button" onclick="toggleMoreMenu(event)">More</button>
                 </div>
                 <div id="moreMenu">
-                    <form id="visualControls" onsubmit="event.preventDefault()">
-                        <div>
-                            <label for="cellHeight">Cell Height</label>
-                            <input type="number" min="2" max="6" id="cellHeight" value="3">
-                        </div>
-                        <div>
-                            <label for="rowGap">Row Gap</label>
-                            <input type="number" min="0" max="3" id="rowGap" value="0">
-                        </div>
-                        <div>
-                            <input type="checkbox" id="excludeFirstRow" checked="checked">
-                            <label for="excludeFirstRow">Hide first row</label>
-                        </div>
-                    </form>
+                    <div v-scope="viewOptionsFormInstance"></div>
                 </div>
             </header>
             <main class="print-visible">
@@ -123,6 +112,28 @@
                 <div>
                     <label for="preambleBeats">Preamble Beats</label>
                     <input type="number" id="preambleBeats" v-model="preambleBeats" :min="MIN_PREAMBLE_BEATS" :max="MAX_PREAMBLE_BEATS">
+                </div>
+            </form>
+        </template>
+        
+        <!--
+        @see /scripts/site/petite-vue/component.view-options-form.js
+        
+        @author elevorous
+        -->
+        <template id="view-options-form-component-template">
+            <form id="view-options-form" v-on:submit.prevent>
+                <div>
+                    <label for="cellHeight">Cell Height</label>
+                    <input type="number" id="cellHeight" v-model="cellHeight" :min="MIN_CELL_HEIGHT" :max="MAX_CELL_HEIGHT">
+                </div>
+                <div>
+                    <label for="rowGap">Row Gap</label>
+                    <input type="number" id="rowGap" v-model="rowGap" :min="MIN_ROW_GAP" :max="MAX_ROW_GAP">
+                </div>
+                <div>
+                    <input type="checkbox" id="excludeFirstRow" v-model="excludeFirstRow">
+                    <label for="excludeFirstRow">Hide first row</label>
                 </div>
             </form>
         </template>

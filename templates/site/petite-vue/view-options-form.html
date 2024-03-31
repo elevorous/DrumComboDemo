@@ -1,0 +1,21 @@
+<!--
+@see /scripts/site/petite-vue/component.view-options-form.js
+
+@author elevorous
+-->
+<template id="view-options-form-component-template">
+    <form id="view-options-form" v-on:submit.prevent>
+        <div>
+            <label for="cellHeight">Cell Height</label>
+            <input type="number" id="cellHeight" v-model="cellHeight" :min="MIN_CELL_HEIGHT" :max="MAX_CELL_HEIGHT">
+        </div>
+        <div>
+            <label for="rowGap">Row Gap</label>
+            <input type="number" id="rowGap" v-model="rowGap" :min="MIN_ROW_GAP" :max="MAX_ROW_GAP">
+        </div>
+        <div>
+            <input type="checkbox" id="excludeFirstRow" v-model="excludeFirstRow">
+            <label for="excludeFirstRow">Hide first row</label>
+        </div>
+    </form>
+</template>
