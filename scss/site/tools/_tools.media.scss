@@ -1,0 +1,11 @@
+@mixin screen-only() {
+    @media not print {
+        @content;
+    }
+}
+
+@mixin print-only() {
+    @media print {
+        @content;
+    }
+}

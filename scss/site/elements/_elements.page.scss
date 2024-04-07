@@ -1,0 +1,33 @@
+
+body {
+    background: powderblue;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+header, main, footer {
+    padding: 0 var(--spacing-normal);
+}
+
+main {
+    flex: 1;
+}
+
+.footer--inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: var(--spacing-normal) 0;
+    font-size: 0.9rem;
+}
+
+.credits {
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.page-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

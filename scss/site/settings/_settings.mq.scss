@@ -1,0 +1,5 @@
+@use "breakpoints";
+
+@use "mq" as * with (
+    $breakpoints: breakpoints.$breakpoints
+);

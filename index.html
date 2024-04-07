@@ -4,8 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
         <title>Drum Combo Demo</title>
-        <link href="css/reset.css" type="text/css" rel="stylesheet">
-        <link href="stylesheets/index.css" rel="stylesheet" type="text/css">
+        <link href="css/site/reset.css" type="text/css" rel="stylesheet">
+        <link href="css/site/style.css" type="text/css" rel="stylesheet">
+        <!-- <link href="stylesheets/index.css" rel="stylesheet" type="text/css"> -->
         <script type="importmap">
             {
                 "imports": {
@@ -27,7 +28,7 @@
     </head>
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
-            <header class="screen-only">
+            <header class="u-screen-only">
                 <div class="controlpanel" v-scope="controlPanelInstance"></div>
                 <div>
                     <button type="button" onclick="toggleMoreMenu(event)">More</button>
@@ -40,11 +41,11 @@
             <footer class="print-visible">
                 <div class="footer--inner container">
                     <div class="credits">
-                        <span class="screen-only">By <a href="https://github.com/elevorous">elevorous</a></span>
-                        <span class="print-only">github.com/elevorous</span>
+                        <span class="u-screen-only">By <a href="https://github.com/elevorous">elevorous</a></span>
+                        <span class="u-print-only">github.com/elevorous</span>
                     </div>
                     <div class="site-version">
-                        <span class="print-only">Site Version </span>alpha-0.2
+                        <span class="u-print-only">Site Version </span>alpha-0.2
                     </div>
                 </div>
             </footer>
@@ -52,7 +53,7 @@
         <!-- Petite-vue Component includes -->
         <!--
         @see /scripts/site/petite-vue/component.generate-grid-form.js
-        
+
         @author elevorous
         -->
         <template id="generate-grid-form-component-template">
@@ -66,10 +67,10 @@
                 </div>
             </form>
         </template>
-        
+
         <!--
         @see /scripts/site/petite-vue/component.metronome-form.js
-        
+
         @author elevorous
         -->
         <template id="metronome-form-component-template">
@@ -87,10 +88,10 @@
                 </div>
             </form>
         </template>
-        
+
         <!--
         @see /scripts/site/petite-vue/component.autoscroll-form.js
-        
+
         @author elevorous
         -->
         <template id="autoscroll-form-component-template">
@@ -113,10 +114,10 @@
                 </div>
             </form>
         </template>
-        
+
         <!--
         @see /scripts/site/petite-vue/component.view-options-form.js
-        
+
         @author elevorous
         -->
         <template id="view-options-form-component-template">
@@ -135,10 +136,10 @@
                 </div>
             </form>
         </template>
-        
+
         <!--
         @see /scripts/site/petite-vue/component.control-panel.js
-        
+
         @author elevorous
         -->
         <template id="control-panel-component-template">
@@ -151,7 +152,7 @@
                 </div>
             </div>
         </template>
-        
+
         <!--
         <template id="control-panel-template">
             <div class="control-panel container">
@@ -208,10 +209,10 @@
                 </div>
             </div>
         </template> -->
-        
+
         <!--
         @see /scripts/site/petite-vue/component.render-area.js
-        
+
         @author elevorous
         -->
         <template id="render-area-component-template">
@@ -228,7 +229,7 @@
                 </div>
             </div>
         </template>
-        
+
         <!-- Scripts -->
         <script src="scripts/site/index.js" type="module"></script>
     </body>

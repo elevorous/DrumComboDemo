@@ -1,3 +1,53 @@
 /**
 * Main .scss import file
 */
+@use "settings/settings.colors" as colors;
+@use "settings/settings.spacings" as spacings;
+@use "settings/settings.breakpoints" as breakpoints;
+
+:root {
+    @each $k, $v in colors.$colors {
+        --color-#{$k}: #{$v};
+    }
+}
+
+:root {
+    @each $k, $v in spacings.$spacings {
+        --spacing-#{$k}: #{$v};
+    }
+}
+
+:root {
+    @each $k, $v in breakpoints.$breakpoints {
+        --breakpoint-#{$k}: #{$v};
+    }
+}
+
+:root {
+    --cell-height: 3rem;
+    --row-gap: 0rem;
+    --current-visible-row-index: 0;
+}
+
+/**
+* Utilities
+*/
+@import "utilities/utilities.media";
+
+/**
+* Objects
+*/
+@import "objects/objects.container";
+
+/**
+* Elements
+*/
+@import "elements/elements.page";
+@import "elements/elements.form";
+
+/**
+* Components
+*/
+@import "components/components.render-area";
+@import "components/components.combination";
+@import "components/components.control-panel";

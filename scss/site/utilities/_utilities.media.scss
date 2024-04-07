@@ -1,15 +1,5 @@
+@use "tools/tools.media" as *;
 
-@mixin screen-only() {
-    @media not print {
-        @content;
-    }
-}
-
-@mixin print-only() {
-    @media print {
-        @content;
-    }
-}
 
 @include screen-only() {
     .u-print-only {

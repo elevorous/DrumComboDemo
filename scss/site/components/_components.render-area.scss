@@ -1,0 +1,25 @@
+
+.render-area--wrapper {
+    background: white;
+    padding: 2em;
+    height: 100%;
+    position: relative;
+}
+
+#renderArea {
+    transition: top 0.2s;
+    top: 0;
+    position: relative;
+}
+
+body[data-auto-scroll-enabled="true"] .render-area--wrapper {
+    overflow-y: hidden;
+}
+
+body[data-auto-scroll-enabled="true"] #renderArea {
+    position: absolute;
+    width: calc(100% - 4em);
+    --row-gap: 3em;
+
+    top: calc(50% - (var(--current-visible-row-index) * (var(--cell-height) + var(--row-gap))));
+}
