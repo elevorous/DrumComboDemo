@@ -5,6 +5,8 @@ import { ControlPanelComponent } from "component.control-panel";
 import { MetronomeFormComponent } from "component.metronome-form";
 import { AutoscrollFormComponent } from "component.autoscroll-form";
 import { ViewOptionsFormComponent } from "component.view-options-form";
+import { RenderAreaComponent } from "component.render-area";
+import { PageManager } from "page-manager";
 
 /**
 *
@@ -17,10 +19,13 @@ import { ViewOptionsFormComponent } from "component.view-options-form";
      * @return {undefined}
      */
     function initialize() {
-        const gridFormInstance = GenerateGridFormComponent();
+        const pageManager = PageManager();
+
+        const gridFormInstance = GenerateGridFormComponent().registerManager(pageManager);
         const metronomeFormInstance = MetronomeFormComponent();
         const autoscrollFormInstance = AutoscrollFormComponent();
-        const viewOptionsFormInstance = ViewOptionsFormComponent();
+        const viewOptionsFormInstance = ViewOptionsFormComponent().registerManager(pageManager);
+        const renderAreaInstance = RenderAreaComponent().registerManager(pageManager);
 
         const controlPanelComponents = [
             {
@@ -54,6 +59,9 @@ import { ViewOptionsFormComponent } from "component.view-options-form";
             },
             get viewOptionsFormInstance() {
                 return viewOptionsFormInstance;
+            },
+            get renderAreaInstance() {
+                return renderAreaInstance;
             }
         }).mount();
     }

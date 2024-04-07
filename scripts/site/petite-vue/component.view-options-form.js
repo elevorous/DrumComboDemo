@@ -14,7 +14,7 @@ import { SiteUtils } from "site-utils";
 
 /**
 * @Component
-* A petite-vue Component representing a form containing controls for generating a combination grid.
+* A petite-vue Component representing
 *
 * @see /templates/site/petite-vue/view-options-form.html
 *
@@ -34,7 +34,8 @@ export function ViewOptionsFormComponent(props) {
         get MAX_ROW_GAP() { return 3; },
 
         /* ------------------ Fields ------------------ */
-        excludeFirstRow: true,
+        manager: null,
+        hideEmptyRow: true,
         rowGap: 0,
         cellHeight: 3,
 
@@ -42,8 +43,24 @@ export function ViewOptionsFormComponent(props) {
 
 
         /* ------------------ Setters ------------------ */
-        set excludeFirstRow(value) {
-            // this.toggleFirstRowVisibility();
+        registerManager(manager) {
+            this.manager = manager;
+            // TODO syncWithManager()
+            return this;
+        },
+        updateManager(updateMap) {
+            if (this.manager && updateMap) {
+                for (const key in updateMap) {
+                    this.manager[key] = updateMap[key];
+                }
+                console.log(this.manager);
+            }
+            return this;
+        },
+        set hideEmptyRow(value) {
+            // TODO: needs testing!
+            this.hideEmptyRow = value;
+            updateManager({'hideEmptyRow': this.hideEmptyRow});
         },
 
         set rowGap(value) {
@@ -57,14 +74,5 @@ export function ViewOptionsFormComponent(props) {
         },
 
         /* ------------------ Functions ------------------ */
-        /**
-        * TODO: more suitable for render area Component
-        * @return {undefined}
-        */
-        toggleFirstRowVisibility() {
-            return;
-            let firstRow = document.querySelector(".combination-wrapper:first-child");
-            EXCLUDE_FIRST_ROW_CHECKBOX.checked ? firstRow.setAttribute("hidden", "") : firstRow.removeAttribute("hidden");
-        }
     }
 }

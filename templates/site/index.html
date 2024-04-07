@@ -18,7 +18,9 @@
                     "component.metronome-form": "./scripts/site/petite-vue/component.metronome-form.js",
                     "component.autoscroll-form": "./scripts/site/petite-vue/component.autoscroll-form.js",
                     "component.view-options-form": "./scripts/site/petite-vue/component.view-options-form.js",
-                    "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js"
+                    "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js",
+                    "component.render-area": "./scripts/site/petite-vue/component.render-area.js",
+                    "page-manager": "./scripts/site/petite-vue/page-manager.js"
                 }
             }
         </script>
@@ -34,11 +36,7 @@
                     <div v-scope="viewOptionsFormInstance"></div>
                 </div>
             </header>
-            <main class="print-visible">
-                <div class="render-area--wrapper container">
-                    <div id="renderArea"></div>
-                </div>
-            </main>
+            <main class="print-visible" v-scope="renderAreaInstance"></main>
             <footer class="print-visible">
                 <div class="footer--inner container">
                     <div class="credits">
@@ -57,6 +55,7 @@
         <!-- @include ./petite-vue/autoscroll-form.html -->
         <!-- @include ./petite-vue/view-options-form.html -->
         <!-- @include ./petite-vue/control-panel.html -->
+        <!-- @include ./petite-vue/render-area.html -->
         <!-- Scripts -->
         <script src="scripts/site/index.js" type="module"></script>
     </body>

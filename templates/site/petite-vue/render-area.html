@@ -1,0 +1,19 @@
+<!--
+@see /scripts/site/petite-vue/component.render-area.js
+
+@author elevorous
+-->
+<template id="render-area-component-template">
+    <div class="render-area--wrapper container">
+        <div id="renderArea">
+            <div class="combination-wrapper" v-for="(combination, index) in currentCombinations" :data-index="index"
+                :hidden="!index && hideEmptyRow"
+            >
+                <div>{{ index }}</div>
+                <div class="combination" :data-value="combination">
+                    <div v-for="bit in [...combination]" :data-bit="bit"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
