@@ -1,0 +1,19 @@
+<!--
+@see /scripts/site/petite-vue/component.side-menu.js
+
+@author elevorous
+-->
+<template id="side-menu-component-template">
+    <div class="side-menu" :data-menu-open="isOpen">
+        <div class="side-menu-toggle">
+            <button type="button" @click="toggleMenu">
+                {{ isOpen ? "Hide menu" : "Show menu" }}
+            </button>
+        </div>
+        <div class="side-menu__menu">
+            <div class="side-menu__menu-items">
+                <div class="side-menu__menu-item" v-for="item in menuItems" v-scope="item.componentInstance"></div>
+            </div>
+        </div>
+    </div>
+</template>

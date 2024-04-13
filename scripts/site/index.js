@@ -2,6 +2,7 @@
 import { createApp } from "petite-vue-pro";
 import { GenerateGridFormComponent } from "component.generate-grid-form";
 import { ControlPanelComponent } from "component.control-panel";
+import { SideMenuComponent } from "component.side-menu";
 import { MetronomeFormComponent } from "component.metronome-form";
 import { AutoscrollFormComponent } from "component.autoscroll-form";
 import { ViewOptionsFormComponent } from "component.view-options-form";
@@ -29,17 +30,17 @@ import { PageManager } from "page-manager";
 
         const controlPanelComponents = [
             {
-                clazz: gridFormInstance,
+                componentInstance: gridFormInstance,
                 name: 'Grid',
                 icon: ''
             },
             {
-                clazz: metronomeFormInstance,
+                componentInstance: metronomeFormInstance,
                 name: 'Metronome',
                 icon: ''
             },
             {
-                clazz: autoscrollFormInstance,
+                componentInstance: autoscrollFormInstance,
                 name: 'Autoscroll',
                 icon: ''
             }
@@ -49,6 +50,18 @@ import { PageManager } from "page-manager";
             controlPanelComponents: controlPanelComponents
         });
 
+        const menuItems = [
+            {
+                componentInstance: viewOptionsFormInstance,
+                name: 'View Options',
+                icon: ''
+            }
+        ];
+
+        const sideMenuInstance = SideMenuComponent({
+            menuItems: menuItems
+        });
+
 
         // TODO: add event listeners for keyboard inputs to change metronome
         // TODO: add facility to load in last saved settings etc.
@@ -56,6 +69,9 @@ import { PageManager } from "page-manager";
         createApp({
             get controlPanelInstance() {
                 return controlPanelInstance;
+            },
+            get sideMenuInstance() {
+                return sideMenuInstance;
             },
             get viewOptionsFormInstance() {
                 return viewOptionsFormInstance;

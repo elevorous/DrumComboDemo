@@ -11,7 +11,7 @@
             <div class="control-panel__panel-toggle">
                 <button type="button" @click="activeControlPanelIndex = index">{{ controlForm.name }}</button>
             </div>
-            <div class="control-panel__panel-content" v-scope="controlForm.clazz"></div>
+            <div class="control-panel__panel-content" v-scope="controlForm.componentInstance"></div>
         </div>
     </div>
 </template>

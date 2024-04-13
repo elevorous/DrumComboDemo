@@ -231,3 +231,25 @@ body[data-auto-scroll-enabled=true] [data-active] + .combination-wrapper {
   align-items: center;
   column-gap: 1em;
 }
+
+header {
+  position: relative;
+}
+
+.side-menu__menu {
+  position: absolute;
+  z-index: 1;
+  background: lightgray;
+  min-width: 30em;
+  max-width: 100vw;
+  right: 0;
+  top: 100%;
+  padding: 1em;
+  height: calc(100vh - 100%);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: none;
+}
+.side-menu[data-menu-open=true] .side-menu__menu {
+  display: block;
+}

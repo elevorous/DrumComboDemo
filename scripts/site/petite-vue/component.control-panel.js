@@ -24,8 +24,8 @@ export function ControlPanelComponent(props) {
         $template: '#control-panel-component-template',
 
         /* ------------------ Fields ------------------ */
-        controlPanelComponents: props.controlPanelComponents,
-        activeControlPanelIndex: 0, 
+        controlPanelComponents: props.controlPanelComponents || [],
+        activeControlPanelIndex: props.activeControlPanelIndex || 0,
 
         /* ------------------ Getters ------------------ */
 
