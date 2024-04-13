@@ -30,8 +30,10 @@
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
             <header class="u-screen-only">
-                <div class="control-panel--wrapper" v-scope="controlPanelInstance"></div>
-                <div class="side-menu--wrapper" v-scope="sideMenuInstance"></div>
+                <div class="header--inner o-container">
+                    <div class="control-panel--wrapper" v-scope="controlPanelInstance"></div>
+                    <div class="side-menu--wrapper" v-scope="sideMenuInstance"></div>
+                </div>
             </header>
             <main v-scope="renderAreaInstance"></main>
             <footer>

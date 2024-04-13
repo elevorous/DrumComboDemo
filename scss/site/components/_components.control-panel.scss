@@ -8,7 +8,7 @@
         display: flex;
         flex: 0 1 auto;
         overflow: hidden;
-        align-items: center;
+        align-items: stretch;
         transition: flex 0.3s;
 
         &[data-active-control-panel] {
@@ -27,6 +27,14 @@
             flex: 0 1 auto;
             overflow: hidden;
             width: 0;
+            position: relative;
+
+            &--inner {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+            }
         }
     }
 }

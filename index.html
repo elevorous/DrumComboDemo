@@ -30,8 +30,10 @@
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
             <header class="u-screen-only">
-                <div class="control-panel--wrapper" v-scope="controlPanelInstance"></div>
-                <div class="side-menu--wrapper" v-scope="sideMenuInstance"></div>
+                <div class="header--inner o-container">
+                    <div class="control-panel--wrapper" v-scope="controlPanelInstance"></div>
+                    <div class="side-menu--wrapper" v-scope="sideMenuInstance"></div>
+                </div>
             </header>
             <main v-scope="renderAreaInstance"></main>
             <footer>
@@ -139,14 +141,16 @@
         @author elevorous
         -->
         <template id="control-panel-component-template">
-            <div class="control-panel o-container">
+            <div class="control-panel">
                 <div class="control-panel__panel" v-for="(controlForm, index) in controlPanelComponents"
                     :data-active-control-panel="index === activeControlPanelIndex || undefined"
                 >
                     <div class="control-panel__panel-toggle">
                         <button type="button" @click="activeControlPanelIndex = index">{{ controlForm.name }}</button>
                     </div>
-                    <div class="control-panel__panel-content" v-scope="controlForm.componentInstance"></div>
+                    <div class="control-panel__panel-content">
+                        <div class="control-panel__panel-content--inner" v-scope="controlForm.componentInstance"></div>
+                    </div>
                 </div>
             </div>
         </template>

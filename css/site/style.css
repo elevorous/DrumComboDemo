@@ -65,6 +65,7 @@ header, main, footer {
 
 main {
   flex: 1;
+  overflow-y: hidden;
 }
 
 .footer--inner {
@@ -84,6 +85,14 @@ main {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.header--inner {
+  display: flex;
+  align-items: center;
+}
+.header--inner .control-panel--wrapper {
+  flex: 1 0 auto;
 }
 
 button {
@@ -137,6 +146,7 @@ input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner
   padding: 2em;
   height: 100%;
   position: relative;
+  overflow-y: scroll;
 }
 
 #renderArea {
@@ -208,7 +218,7 @@ body[data-auto-scroll-enabled=true] [data-active] + .combination-wrapper {
   display: flex;
   flex: 0 1 auto;
   overflow: hidden;
-  align-items: center;
+  align-items: stretch;
   transition: flex 0.3s;
 }
 .control-panel__panel[data-active-control-panel] {
@@ -224,6 +234,13 @@ body[data-auto-scroll-enabled=true] [data-active] + .combination-wrapper {
   flex: 0 1 auto;
   overflow: hidden;
   width: 0;
+  position: relative;
+}
+.control-panel__panel-content--inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
 }
 
 .control-panel {
