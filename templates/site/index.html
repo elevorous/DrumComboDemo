@@ -28,8 +28,8 @@
     </head>
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
-            <header class="screen-only">
-                <div class="controlpanel" v-scope="controlPanelInstance"></div>
+            <header class="u-screen-only">
+                <div class="control-panel--wrapper" v-scope="controlPanelInstance"></div>
                 <div>
                     <button type="button" onclick="toggleMoreMenu(event)">More</button>
                 </div>
@@ -37,15 +37,15 @@
                     <div v-scope="viewOptionsFormInstance"></div>
                 </div>
             </header>
-            <main class="print-visible" v-scope="renderAreaInstance"></main>
-            <footer class="print-visible">
-                <div class="footer--inner container">
+            <main v-scope="renderAreaInstance"></main>
+            <footer>
+                <div class="footer--inner o-container">
                     <div class="credits">
-                        <span class="screen-only">By <a href="https://github.com/elevorous">elevorous</a></span>
-                        <span class="print-only">github.com/elevorous</span>
+                        <span class="u-screen-only">By <a href="https://github.com/elevorous">elevorous</a></span>
+                        <span class="u-print-only">github.com/elevorous</span>
                     </div>
                     <div class="site-version">
-                        <span class="print-only">Site Version </span>alpha-0.2
+                        <span class="u-print-only">Site Version </span>alpha-0.2
                     </div>
                 </div>
             </footer>

@@ -1,10 +1,44 @@
-input[type="number"] {
-    padding: 0.4rem 0.8rem;
-    width: 9ch;
-}
+// TODO: lineheight should be on :root somewhere
+$line-height: 1.2rem;
 
 form {
     display: flex;
     align-items: center;
     column-gap: 1em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="checkbox"],
+input[type="radio"],
+textarea,
+select {
+    --input-padding: var(--spacing-small);
+    background: var(--color-white);
+    padding: var(--input-padding);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    aspect-ratio: 1;
+    height: calc(#{$line-height} + (2 * var(--input-padding)));
+    position: relative;
+
+    &:checked {
+        &::after {
+            content: 'x';
+        }
+    }
+}
+
+input[type="number"] {
+    width: 4ch;
+
+    // hides the little stepper buttons
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+        -wekbit-appearance: none;
+        margin: 0;
+    }
+
+    -moz-appearance: textfield;
 }
