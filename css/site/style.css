@@ -53,10 +53,21 @@
 /**
 * Elements
 */
+:root {
+  --z-index--header: 1;
+  --z-index--site-menu: calc(var(--z-index--header) + 1);
+  --z-index--consent-banner: 5;
+}
+
 body {
   background: powderblue;
   height: 100vh;
   overflow-x: hidden;
+}
+
+header {
+  position: relative;
+  z-index: var(--z-index--header);
 }
 
 header, main, footer {
@@ -249,13 +260,9 @@ body[data-auto-scroll-enabled=true] [data-active] + .combination-wrapper {
   column-gap: 1em;
 }
 
-header {
-  position: relative;
-}
-
 .side-menu__menu {
   position: absolute;
-  z-index: 1;
+  z-index: var(--z-index--site-menu);
   background: lightgray;
   min-width: 30em;
   max-width: 100vw;
@@ -275,4 +282,6 @@ header {
   padding: var(--spacing-medium-large) var(--spacing-normal);
   background: darkgrey;
   color: var(--color-white);
+  position: relative;
+  z-index: var(--z-index--consent-banner);
 }

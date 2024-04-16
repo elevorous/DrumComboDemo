@@ -2,4 +2,6 @@
     padding: var(--spacing-medium-large) var(--spacing-normal);
     background: darkgrey;
     color: var(--color-white);
+    position: relative;
+    z-index: var(--z-index--consent-banner);
 }

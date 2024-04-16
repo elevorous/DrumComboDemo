@@ -1,8 +1,18 @@
+:root {
+    --z-index--header: 1;
+    --z-index--site-menu: calc(var(--z-index--header) + 1);
+    --z-index--consent-banner: 5;
+}
 
 body {
     background: powderblue;
     height: 100vh;
     overflow-x: hidden;
+}
+
+header {
+    position: relative;
+    z-index: var(--z-index--header);
 }
 
 header, main, footer {
