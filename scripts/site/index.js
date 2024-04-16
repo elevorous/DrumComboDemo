@@ -7,6 +7,7 @@ import { MetronomeFormComponent } from "component.metronome-form";
 import { AutoscrollFormComponent } from "component.autoscroll-form";
 import { ViewOptionsFormComponent } from "component.view-options-form";
 import { RenderAreaComponent } from "component.render-area";
+import { ConsentBannerComponent } from "component.consent-banner";
 import { PageManager } from "page-manager";
 
 /**
@@ -62,6 +63,8 @@ import { PageManager } from "page-manager";
             menuItems: menuItems
         });
 
+        const consentBannerInstance = ConsentBannerComponent();
+
 
         // TODO: add event listeners for keyboard inputs to change metronome
         // TODO: add facility to load in last saved settings etc.
@@ -78,6 +81,9 @@ import { PageManager } from "page-manager";
             },
             get renderAreaInstance() {
                 return renderAreaInstance;
+            },
+            get consentBannerInstance() {
+                return consentBannerInstance;
             }
         }).mount();
     }

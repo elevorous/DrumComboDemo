@@ -22,6 +22,7 @@
                     "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js",
                     "component.side-menu": "./scripts/site/petite-vue/component.side-menu.js",
                     "component.render-area": "./scripts/site/petite-vue/component.render-area.js",
+                    "component.consent-banner": "./scripts/site/petite-vue/component.consent-banner.js",
                     "page-manager": "./scripts/site/petite-vue/page-manager.js"
                 }
             }
@@ -47,6 +48,7 @@
                     </div>
                 </div>
             </footer>
+            <div v-scope="consentBannerInstance"></div>
         </div>
         <!-- Petite-vue Component includes -->
         <!--
@@ -190,6 +192,28 @@
                         <div class="combination" :data-value="combination">
                             <div v-for="bit in [...combination]" :data-bit="bit"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!--
+        @see /scripts/site/petite-vue/component.consent-banner.js
+        
+        @author elevorous
+        -->
+        <template id="consent-banner-component-template">
+            <div class="consent-banner">
+                <div class="consent-banner--inner o-container">
+                    <div class="consent-banner__content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque urna sem, porttitor ullamcorper nulla nec, placerat porta urna. Quisque imperdiet, elit ullamcorper dictum eleifend, nulla purus auctor elit, vel tincidunt magna massa sed tortor.</p>
+                    </div>
+                    <div class="consent-banner__form">
+                        <form id="consent-form" v-on:submit.prevent="submitConsent(event)">
+                            <!-- Only functional should be first in the DOM as the default action if Enter it hit. -->
+                            <button type="submit" name="consent-level" value="1">Only functional, thanks</button>
+                            <button type="submit" name="consent-level" value="2">I'm okay with analytics</button>
+                        </form>
                     </div>
                 </div>
             </div>

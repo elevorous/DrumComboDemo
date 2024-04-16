@@ -22,6 +22,7 @@
                     "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js",
                     "component.side-menu": "./scripts/site/petite-vue/component.side-menu.js",
                     "component.render-area": "./scripts/site/petite-vue/component.render-area.js",
+                    "component.consent-banner": "./scripts/site/petite-vue/component.consent-banner.js",
                     "page-manager": "./scripts/site/petite-vue/page-manager.js"
                 }
             }
@@ -47,6 +48,7 @@
                     </div>
                 </div>
             </footer>
+            <div v-scope="consentBannerInstance"></div>
         </div>
         <!-- Petite-vue Component includes -->
         <!-- @include ./petite-vue/generate-grid-form.html -->
@@ -56,6 +58,7 @@
         <!-- @include ./petite-vue/control-panel.html -->
         <!-- @include ./petite-vue/side-menu.html -->
         <!-- @include ./petite-vue/render-area.html -->
+        <!-- @include ./petite-vue/consent-banner.html -->
         <!-- Scripts -->
         <script src="scripts/site/index.js" type="module"></script>
     </body>
