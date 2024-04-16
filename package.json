@@ -2,6 +2,7 @@
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-dart-sass": "^1.1.0",
+    "gulp-mode": "^1.1.0",
     "gulp-preprocess": "^5.0.0",
     "sass-mq": "^6.0.0"
   }
