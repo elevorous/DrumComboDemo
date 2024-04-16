@@ -1,10 +1,13 @@
-/**
-* https://github.com/pioug/gulp-preprocess
-*/
 var integrations = require("./integrations.js");
 var gulp = require("gulp");
+/**
+* @see https://github.com/pioug/gulp-preprocess
+*/
 var preprocess = require("gulp-preprocess");
 var sass = require("gulp-dart-sass");
+/**
+* @see https://www.npmjs.com/package/gulp-mode
+*/
 var mode = require("gulp-mode")({
     modes: ["gulpModeLive", "gulpModeDev"],
     default: "gulpModeDev",
@@ -20,16 +23,13 @@ const SASS_DEST = "./css";
 
 const SASS_MQ_INCLUDE_PATH = "./node_modules/sass-mq/_mq.scss";
 
-const MODE_DEV = "--dev";
-const MODE_LIVE = "--live";
-
-const preprocessInstance = preprocess({
-    context: (mode.gulpModeLive() ? integrations.LIVE : integrations.DEV)
-});
+const isLive = mode.gulpModeLive();
 
 gulp.task("html", function() {
     return gulp.src(TEMPLATE_PREPROCESS_SRC)
-                .pipe(preprocessInstance)
+                .pipe(preprocess({
+                    context: (isLive ? integrations.LIVE : integrations.DEV)
+                }))
                 .pipe(gulp.dest(TEMPLATE_PREPROCESS_DEST));
 });
 
