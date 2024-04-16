@@ -8,9 +8,9 @@
 * @author elevorous
 */
 
-import { CombinationGeneratorService } from "combination-generator";
-
 'use strict';
+
+import { CombinationGeneratorService } from "combination-generator";
 
 /**
 * @Component

@@ -10,6 +10,8 @@
 
 'use strict';
 
+import { SiteUtils } from "site-utils";
+
 /**
 * TODO: implement!
 *
@@ -26,13 +28,23 @@ export function ConsentBannerComponent(props) {
         $template: '#consent-banner-component-template',
 
         /* ------------------ Fields ------------------ */
+        // TODO: woulc be better to unmount / deactivate. Also pagemanager should dictate whether this component is
+        // mounted in the first place if the consent level is already set.
+        isHidden: false,
 
         /* ------------------ Getters ------------------ */
 
         /* ------------------ Functions ------------------ */
-        submitConsent(event) {
-            console.log(event);
-            console.log(this);
+        submitConsent(consentLevel) {
+            consentLevel = parseInt(consentLevel);
+
+            if (consentLevel === SiteUtils.Consent.Level.FUNCTIONAL_AND_ANALYTICS) {
+                // TODO: allow google analytics.
+                console.log('allow ga');
+            }
+
+            SiteUtils.Consent.setSiteConsentLevel(consentLevel);
+            this.isHidden = true;
         }
     }
 }
