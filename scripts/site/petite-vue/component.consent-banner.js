@@ -59,13 +59,12 @@ export function ConsentBannerComponent(props) {
         /* ------------------ Fields ------------------ */
         // TODO: woulc be better to unmount / deactivate. Also pagemanager should dictate whether this component is
         // mounted in the first place if the consent level is already set.
-        isHidden: false,
+        isHidden: true,
 
         /* ------------------ Getters ------------------ */
 
         /* ------------------ Functions ------------------ */
         submitConsent(consentLevel) {
-            console.log(this);
             consentLevel = parseInt(consentLevel);
 
             if (consentLevel === SiteUtils.Consent.Level.FUNCTIONAL_AND_ANALYTICS) {
@@ -83,6 +82,8 @@ export function ConsentBannerComponent(props) {
             if (!analyticsId) {
                 analyticsId = _analyticsId;
             }
+
+            this.hidden = SiteUtils.Consent.getSiteConsentLevel !== null;
         }
     }
 }
