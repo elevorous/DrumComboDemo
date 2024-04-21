@@ -3,42 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-<!-- @echo IMPORT_MAP_HASH -->' https://www.googletagmanager.com; style-src 'self'; base-uri 'self'; connect-src 'self' https://*.google-analytics.com">
         <title>Drum Combo Demo</title>
         <link href="css/site/reset.css" type="text/css" rel="stylesheet">
         <link href="css/site/style.css" type="text/css" rel="stylesheet">
-        <!-- <link href="stylesheets/index.css" rel="stylesheet" type="text/css"> -->
-        <script type="importmap">
-            {
-                "imports": {
-                    "site-utils": "./scripts/site/module/site-utils.js",
-                    "callback-oscillator-node": "./scripts/site/module/callback-oscillator-node.js",
-                    "callback-metronome": "./scripts/site/module/callback-metronome.js",
-                    "combination-generator": "./scripts/site/module/combination-generator.js",
-                    "petite-vue-pro": "./scripts/vendor/petite-vue-pro@0.4.6.js",
-                    "component.generate-grid-form": "./scripts/site/petite-vue/component.generate-grid-form.js",
-                    "component.metronome-form": "./scripts/site/petite-vue/component.metronome-form.js",
-                    "component.autoscroll-form": "./scripts/site/petite-vue/component.autoscroll-form.js",
-                    "component.view-options-form": "./scripts/site/petite-vue/component.view-options-form.js",
-                    "component.control-panel": "./scripts/site/petite-vue/component.control-panel.js",
-                    "component.side-menu": "./scripts/site/petite-vue/component.side-menu.js",
-                    "component.render-area": "./scripts/site/petite-vue/component.render-area.js",
-                    "component.consent-banner": "./scripts/site/petite-vue/component.consent-banner.js",
-                    "page-manager": "./scripts/site/petite-vue/page-manager.js"
-                }
-            }
-        </script>
-        <script type="module">
-            import { SiteUtils } from "site-utils";
-
-            SiteUtils.Analytics.gtag('consent', 'default', {
-                'ad_storage': 'denied',
-                'ad_user_data': 'denied',
-                'ad_personalization': 'denied',
-                'analytics_storage': 'denied'
-            });
-            // just to be doubly-sure
-            SiteUtils.Analytics.gtag('set', 'ads_data_redaction', true);
-        </script>
+        <script type="importmap"><!-- @echo IMPORT_MAP --></script>
+        <script src="scripts/site/head.js" type="module"></script>
     </head>
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">
