@@ -32,41 +32,54 @@ class CookieUtils {
 
     /* ------------------ Getters ------------------ */
     static get EPOCH() { return this.#EPOCH; }
+    static get YEAR_MILLISECONDS() { return this.#YEAR_MILLISECONDS; }
 
     /* ------------------ Functions ------------------ */
     /**
-    *	@param {string} cookieName
-    *	@param {string} value
-    *	@param {number} lifetime in milliseconds
-    *	@param {string} path
-    *	@return {undefined}
+    * @param {string} cookieName
+    * @param {string} value
+    * @param {int|Date} lifetime in milliseconds (if an int), or a concrete expiry Date
+    * @param {string} path
+    * @param {object} otherOpts
+    * @return {undefined}
     */
-    static setCookie(cookieName, value, lifetime, path) {
+    static setCookie(cookieName, value, lifetime, path, otherOpts={}) {
         if (!cookieName) return;
 
         if (value === null || value === void(0)) {
             value = 'true';
         }
 
-        if (typeof lifetime !== 'number' || !isFinite(lifetime) || lifetime <= 0) {
-            lifetime = this.#YEAR_MILLISECONDS;
+        let expiryDate = null;
+
+        if (lifetime instanceof Date) {
+            expiryDate = lifetime;
         }
         else {
-            lifetime = Math.floor(lifetime);	// ensure it's an integer
+            if (typeof lifetime !== 'number' || !isFinite(lifetime) || lifetime <= 0) {
+                lifetime = this.#YEAR_MILLISECONDS;
+            }
+            else {
+                lifetime = Math.floor(lifetime);	// ensure it's an integer
+            }
+
+            expiryDate = new Date();
+            expiryDate.setTime(expiryDate.getTime() + lifetime);
         }
 
         if (!path) path = '/';
 
-        let d = new Date();
-        d.setTime(d.getTime() + lifetime);
+        const domain = otherOpts.domain || document.domain;
+        const sameSite = otherOpts.sameSite || 'Strict';
+        const secure = otherOpts.secure === undefined ? 'Secure' : (otherOpts.secure ? 'Secure': '');
 
-        document.cookie = `${cookieName}=${value};expires=${d.toUTCString()};path=${path}`;
+        document.cookie = `${cookieName}=${value};expires=${expiryDate.toUTCString()};path=${path};` +
+                            `domain=${domain};SameSite=${sameSite};${secure}'`;
     }
 
     /**
-    * TODO: change signature of this to match getCookies
-    *	@param {string} cookieName
-    *	@return {any|undefined} - the value of the named cookie, or undefined if no cookie with that name was found
+    * @param {string} cookieName
+    * @return {any|null} - the value of the named cookie, or null if no cookie with that name was found
     */
     static getCookie(cookieName) {
         if (cookieName) {
@@ -77,6 +90,8 @@ class CookieUtils {
                 }
             }
         }
+
+        return null;
     }
 
     /**
@@ -182,7 +197,7 @@ class ConsentUtils {
     * @return {int|null}
     */
     static getSiteConsentLevel() {
-        CookieUtils.getCookie(this.#CONSENT_LEVEL_COOKIE_NAME);
+        return CookieUtils.getCookie(this.#CONSENT_LEVEL_COOKIE_NAME);
     }
 }
 
@@ -200,7 +215,12 @@ class AnalyticsUtils {
     * @param {string} analyticsId
     * @return {undefined}
     */
-    setupAnalytics(analyticsId) {
+    static setupAnalytics(analyticsId) {
+        if (typeof window.gtag === 'function') {
+            console.info("gtag already appears to be set up");
+            return;
+        }
+
         if (!this.#GA4_MEASUREMENT_ID_REGEX.test(analyticsId)) {
             console.error("That was a bad analytics ID!");
             return;
@@ -211,9 +231,18 @@ class AnalyticsUtils {
         script.async = true;
 
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', analyticsId);
+        window.gtag = function(){dataLayer.push(arguments);}
+        window.gtag('js', new Date());
+
+        // place restrictions on analytics cookies
+        window.gtag('config', analyticsId, {
+            'cookie_domain': document.domain,                           // prevent top-level domain usage
+            'cookie_expires': CookieUtils.YEAR_MILLISECONDS / 1000,     // reduce lifetime to a year (seconds)
+            'cookie_update': false,                                     // prevent the expiry date resetting on every page refresh
+            'cookie_flags': 'SameSite=None;Secure'                      // be explicit with SameSite
+        });
+
+        // TODO: that GS flag is not respecting the cookie_update setting, but the GA one is.
 
         document.body.append(script);
     }
@@ -222,7 +251,7 @@ class AnalyticsUtils {
     *
     * @return {undefined}
     */
-    deleteAnalyticsCookies() {
+    static deleteAnalyticsCookies() {
         CookieUtils.deleteCookies(this.#GA4_COOKIE_FIND_REGEX);
     }
 }
@@ -242,6 +271,10 @@ class SiteUtils {
 
     static get Consent() {
         return ConsentUtils;
+    }
+
+    static get Analytics() {
+        return AnalyticsUtils;
     }
 }
 

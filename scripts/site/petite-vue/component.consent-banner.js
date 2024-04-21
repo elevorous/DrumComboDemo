@@ -12,36 +12,7 @@
 
 import { SiteUtils } from "site-utils";
 
-const ANALYTICS_ID_REGEX = /^G-[A-Z0-9]{10}$/g;
-
 /**
-* purposefully not made accessible on the component
-*   TODO: maybe move to a SiteUtil
-*
-* @param {string} analyticsId
-* @return {undefined}
-*/
-function setupAnalytics(analyticsId) {
-    if (!ANALYTICS_ID_REGEX.test(analyticsId)) {
-        console.error("That was a bad analytics ID!");
-        return;
-    }
-
-    let script = document.createElement('script');
-    script.src = "https://www.googletagmanager.com/gtag/js?id=" + analyticsId;
-    script.async = true;
-
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', analyticsId);
-
-    document.body.append(script);
-}
-
-/**
-* TODO: implement!
-*
 * @Component
 * A petite-vue Component representing
 *
@@ -68,7 +39,11 @@ export function ConsentBannerComponent(props) {
             consentLevel = parseInt(consentLevel);
 
             if (consentLevel === SiteUtils.Consent.Level.FUNCTIONAL_AND_ANALYTICS) {
-                setupAnalytics(analyticsId);
+                SiteUtils.Analytics.setupAnalytics(analyticsId);
+            }
+            else {
+                // remove any analytics cookies which might have been lingering
+                SiteUtils.Analytics.deleteAnalyticsCookies();
             }
 
             SiteUtils.Consent.setSiteConsentLevel(consentLevel);
@@ -83,7 +58,18 @@ export function ConsentBannerComponent(props) {
                 analyticsId = _analyticsId;
             }
 
-            this.hidden = SiteUtils.Consent.getSiteConsentLevel !== null;
+            let consentLevel = SiteUtils.Consent.getSiteConsentLevel() || (this.isHidden = false);
+
+            // this will be NaN if we didn't have a consent level from the cookies
+            consentLevel = parseInt(consentLevel);
+
+            if (consentLevel === SiteUtils.Consent.Level.FUNCTIONAL_AND_ANALYTICS) {
+                SiteUtils.Analytics.setupAnalytics(analyticsId);
+            }
+            else {
+                // remove any analytics cookies which might have been lingering
+                SiteUtils.Analytics.deleteAnalyticsCookies();
+            }
         }
     }
 }
