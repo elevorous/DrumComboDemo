@@ -27,6 +27,18 @@
                 }
             }
         </script>
+        <script type="module">
+            import { SiteUtils } from "site-utils";
+
+            SiteUtils.Analytics.gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'denied'
+            });
+            // just to be doubly-sure
+            SiteUtils.Analytics.gtag('set', 'ads_data_redaction', true);
+        </script>
     </head>
     <body data-auto-scroll-enabled="false" data-metronome-running="false">
         <div class="page-content">

@@ -133,8 +133,8 @@ class CookieUtils {
 
         // change back to the array of key=value strings
         let arr = [];
-        for (const key in allCookies) {
-            arr.push(`${key}=${allCookies[key]}`);
+        for (const key in ret) {
+            arr.push(`${key}=${ret[key]}`);
         }
 
         return arr;
@@ -210,13 +210,30 @@ class AnalyticsUtils {
     static #GA4_MEASUREMENT_ID_REGEX = /^G-[A-Z0-9]{10}$/g;
     static #GA4_COOKIE_FIND_REGEX = /^_ga/;
 
+    /* ------------------ Fields ------------------ */
+    static #analyticsScript = null;
+
+    /* ------------------ Getters ------------------ */
+    /**
+     * Will initialize the gtag function on window if not already defined
+     * @return {function}
+     */
+    static get gtag() {
+        if (typeof window.gtag !== 'function') {
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function(){dataLayer.push(arguments);}
+        }
+
+        return window.gtag;
+    }
+
     /* ------------------ Functions ------------------ */
     /**
     * @param {string} analyticsId
     * @return {undefined}
     */
     static setupAnalytics(analyticsId) {
-        if (typeof window.gtag === 'function') {
+        if (this.#analyticsScript) {
             console.info("gtag already appears to be set up");
             return;
         }
@@ -226,33 +243,75 @@ class AnalyticsUtils {
             return;
         }
 
-        let script = document.createElement('script');
-        script.src = "https://www.googletagmanager.com/gtag/js?id=" + analyticsId;
-        script.async = true;
+        this.setAnalyticsConsent(true);
 
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function(){dataLayer.push(arguments);}
-        window.gtag('js', new Date());
+        this.gtag('js', new Date());
 
         // place restrictions on analytics cookies
-        window.gtag('config', analyticsId, {
+        this.gtag('config', analyticsId, {
             'cookie_domain': document.domain,                           // prevent top-level domain usage
             'cookie_expires': CookieUtils.YEAR_MILLISECONDS / 1000,     // reduce lifetime to a year (seconds)
             'cookie_update': false,                                     // prevent the expiry date resetting on every page refresh
-            'cookie_flags': 'SameSite=None;Secure'                      // be explicit with SameSite
+            'cookie_flags': 'SameSite=None;Secure',                     // be explicit with SameSite
+            'allow_ad_personalization_signals': false,                  // no shady ad stuff thanks...
+            'restricted_data_processing': true
         });
 
-        // TODO: that GS flag is not respecting the cookie_update setting, but the GA one is.
-
-        document.body.append(script);
+        this.#addAnalyticsScript(analyticsId);
     }
 
     /**
-    *
+    * @return {undefined}
+    */
+    static tearDownAnalytics() {
+        this.setAnalyticsConsent(false);
+        this.deleteAnalyticsCookies();
+        this.removeAnalyticsScript();
+    }
+
+    /**
+    * @return {boolean}
+    */
+    static hasAnalyticsCookies() {
+        return CookieUtils.findCookies(this.#GA4_COOKIE_FIND_REGEX).length;
+    }
+
+    /**
     * @return {undefined}
     */
     static deleteAnalyticsCookies() {
         CookieUtils.deleteCookies(this.#GA4_COOKIE_FIND_REGEX);
+    }
+
+    /**
+    * @param {boolean}
+    * @return {undefined}
+    */
+    static setAnalyticsConsent(allow) {
+        this.gtag('consent', 'update', {
+            'analytics_storage': allow ? 'granted' : 'denied'
+        });
+    }
+
+    /**
+    * @param {string} analyticsId
+    * @return {undefined}
+    */
+    static #addAnalyticsScript(analyticsId) {
+        let script = document.createElement('script');
+        script.src = "https://www.googletagmanager.com/gtag/js?id=" + analyticsId;
+        script.async = true;
+        this.#analyticsScript = script;
+        document.body.append(this.#analyticsScript);
+    }
+
+    /**
+    * @param {string} analyticsId
+    * @return {undefined}
+    */
+    static removeAnalyticsScript() {
+        this.#analyticsScript?.remove();
+        this.#analyticsScript = null;
     }
 }
 

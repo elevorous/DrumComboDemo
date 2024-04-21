@@ -43,7 +43,7 @@ export function ConsentBannerComponent(props) {
             }
             else {
                 // remove any analytics cookies which might have been lingering
-                SiteUtils.Analytics.deleteAnalyticsCookies();
+                SiteUtils.Analytics.tearDownAnalytics();
             }
 
             SiteUtils.Consent.setSiteConsentLevel(consentLevel);
@@ -68,7 +68,7 @@ export function ConsentBannerComponent(props) {
             }
             else {
                 // remove any analytics cookies which might have been lingering
-                SiteUtils.Analytics.deleteAnalyticsCookies();
+                SiteUtils.Analytics.tearDownAnalytics();
             }
         }
     }
