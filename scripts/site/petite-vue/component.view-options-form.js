@@ -11,6 +11,8 @@
 'use strict';
 
 import { SiteUtils } from "site-utils";
+import { reactive } from "petite-vue-pro";
+
 
 /**
 * @Component
@@ -24,55 +26,89 @@ import { SiteUtils } from "site-utils";
 export function ViewOptionsFormComponent(props) {
     const ROOT = document.documentElement;
 
+    /**
+     *  Okay, after a lot of backwards and forwards exploring my options, I've decided to keep things straightforward
+     *      when it comes to constructing these component objects.
+     *  Using classes would have been far more preferable, but petite-vue-pro just doesn't appear to support any
+     *      kind of object where its properties are not directly its own properties - so for instance, properties on
+     *      an object's prototype or constructor can't be extrapolated.
+     *  Additionally, getters and setters on classes (i.e. assigned to the protoype), aren't enumerable, unlike getters
+     *      and setters on plain objects. Statics are also a pain to refer to, as they are assigned to the constructor
+     *      function, and you need to refer to them by the class name, or via the constructor of an instance, e.g.
+     *      `myInstance.constructor.MY_STATIC`
+     *
+     *  So, we're in a position where we don't have the ability to privatise or static-ise fields, nor do we have
+     *      the ability to inherit properties from a common ancestor by assigning to the prototype.
+     *  On the former, we could define private and const fields within the context of this ViewOptionsFormComponent
+     *      function here, and then get/set them from the returned component object. It requires a little more
+     *      legwork in that we need to explicitly make private fields reactive(), but it's a viable option.
+     *  On the latter, inheritance might not be on the cards, but a mixin would achieve what's needed for the particular
+     *      use case here, in giving multiple component objects the `manager` set of properties and functions.
+     *
+     *  Another potential option *is* to use a class, but assign an instance of that class to the component object,
+     *      and manipulate that. However, I'm not convinced that petite-vue-pro's reactivity on that instance would
+     *      watch for changes on the properties of that instance, especially since you'd still have that issue of
+     *      prototype and constructor properties not being directly findable on the instance.
+     */
+
+     /*
+    let _manager = reactive(null);
+    let _hideEmptyRow = reactive(true);
+    let _rowGap = reactive(0);
+    let _cellHeight = reactive(3);
+    */
+
     return {
         $template: '#view-options-form-component-template',
 
-        /* ------------------ Static ------------------ */
+        /* ------------------ "Static" ------------------ */
         get MIN_CELL_HEIGHT() { return 2; },
         get MAX_CELL_HEIGHT() { return 6; },
         get MIN_ROW_GAP() { return 0; },
         get MAX_ROW_GAP() { return 3; },
 
         /* ------------------ Fields ------------------ */
-        manager: null,
-        hideEmptyRow: true,
-        rowGap: 0,
-        cellHeight: 3,
+        _manager: null,
+        _hideEmptyRow: true,
+        _rowGap: 0,
+        _cellHeight: 3,
 
         /* ------------------ Getters ------------------ */
-
+        get hideEmptyRow() { return this._hideEmptyRow; },
+        get rowGap() { return this._rowGap; },
+        get cellHeight() { return this._cellHeight; },
 
         /* ------------------ Setters ------------------ */
-        registerManager(manager) {
-            this.manager = manager;
-            // TODO syncWithManager()
-            return this;
-        },
-        updateManager(updateMap) {
-            if (this.manager && updateMap) {
-                for (const key in updateMap) {
-                    this.manager[key] = updateMap[key];
-                }
-                console.log(this.manager);
-            }
-            return this;
-        },
         set hideEmptyRow(value) {
             // TODO: needs testing!
-            this.hideEmptyRow = value;
-            updateManager({'hideEmptyRow': this.hideEmptyRow});
+            this._hideEmptyRow = value;
+            this.updateManager({'hideEmptyRow': this._hideEmptyRow});
         },
 
         set rowGap(value) {
-            this.rowGap = SiteUtils.Math.clamp(value, this.MIN_ROW_GAP, this.MAX_ROW_GAP);
+            this._rowGap = SiteUtils.Math.clamp(value, this.MIN_ROW_GAP, this.MAX_ROW_GAP);
             // ROOT.style.setProperty("--row-gap", val + "em");
         },
 
         set cellHeight(value) {
-            this.cellHeight = SiteUtils.Math.clamp(value, this.MIN_CELL_HEIGHT, this.MAX_CELL_HEIGHT);
+            this._cellHeight = SiteUtils.Math.clamp(value, this.MIN_CELL_HEIGHT, this.MAX_CELL_HEIGHT);
             // ROOT.style.setProperty("--cell-height", val + "em");
         },
 
         /* ------------------ Functions ------------------ */
+        registerManager(manager) {
+            this._manager = manager;
+            // TODO syncWithManager()
+            return this;
+        },
+        updateManager(updateMap) {
+            if (this._manager && updateMap) {
+                for (const key in updateMap) {
+                    this._manager[key] = updateMap[key];
+                }
+                console.log(this._manager);
+            }
+            return this;
+        }
     }
 }

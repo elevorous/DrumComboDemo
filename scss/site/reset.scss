@@ -53,8 +53,8 @@ textarea {
     color: unset;
 }
 
-:where([hidden]) {
-    display: none;
+[hidden] {
+    display: none !important;
 }
 
 /* apply back the draggable feature - exist only in Chromium and Safari */
