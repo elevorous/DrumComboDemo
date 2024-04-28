@@ -11,7 +11,7 @@
 'use strict';
 
 import { SiteUtils } from "site-utils";
-import { reactive } from "petite-vue-pro";
+import { mixin__PageManagerAware } from "page-manager";
 
 
 /**
@@ -51,14 +51,7 @@ export function ViewOptionsFormComponent(props) {
      *      prototype and constructor properties not being directly findable on the instance.
      */
 
-     /*
-    let _manager = reactive(null);
-    let _hideEmptyRow = reactive(true);
-    let _rowGap = reactive(0);
-    let _cellHeight = reactive(3);
-    */
-
-    return {
+    let component = {
         $template: '#view-options-form-component-template',
 
         /* ------------------ "Static" ------------------ */
@@ -68,7 +61,6 @@ export function ViewOptionsFormComponent(props) {
         get MAX_ROW_GAP() { return 3; },
 
         /* ------------------ Fields ------------------ */
-        _manager: null,
         _hideEmptyRow: true,
         _rowGap: 0,
         _cellHeight: 3,
@@ -93,22 +85,8 @@ export function ViewOptionsFormComponent(props) {
         set cellHeight(value) {
             this._cellHeight = SiteUtils.Math.clamp(value, this.MIN_CELL_HEIGHT, this.MAX_CELL_HEIGHT);
             // ROOT.style.setProperty("--cell-height", val + "em");
-        },
-
-        /* ------------------ Functions ------------------ */
-        registerManager(manager) {
-            this._manager = manager;
-            // TODO syncWithManager()
-            return this;
-        },
-        updateManager(updateMap) {
-            if (this._manager && updateMap) {
-                for (const key in updateMap) {
-                    this._manager[key] = updateMap[key];
-                }
-                console.log(this._manager);
-            }
-            return this;
         }
-    }
+    };
+
+    return mixin__PageManagerAware(component);
 }

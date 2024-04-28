@@ -11,6 +11,8 @@
 'use strict';
 
 import { CombinationGeneratorService } from "combination-generator";
+import { mixin__PageManagerAware } from "page-manager";
+
 
 /**
 * @Component
@@ -22,11 +24,10 @@ import { CombinationGeneratorService } from "combination-generator";
 * @return {object} - a GenerateGridFormComponent instance
 */
 export function GenerateGridFormComponent(props) {
-    return {
+    let component = {
         $template: '#generate-grid-form-component-template',
 
         /* ------------------ Fields ------------------ */
-        manager: null,
         nValue: 4,
         currentVal: null,
         cachedCombinations: [],     // TODO: don't cache the HTML perhaps, just the combination array
@@ -38,20 +39,6 @@ export function GenerateGridFormComponent(props) {
         get maxNValue() { return 9; },
 
         /* ------------------ Functions ------------------ */
-        // TODO: would be good for this to be a proper class so that all components can use the same register function
-        registerManager(manager) {
-            this.manager = manager;
-            return this;
-        },
-        updateManager(updateMap) {
-            if (this.manager && updateMap) {
-                for (const key in updateMap) {
-                    this.manager[key] = updateMap[key];
-                }
-                console.log(this.manager);
-            }
-            return this;
-        },
         /**
         * Triggered on submit of the form element
         *
@@ -70,14 +57,10 @@ export function GenerateGridFormComponent(props) {
                 // this.cachedCombinations[this.nValue] = combinations.map((combo, i) => this.createCombinationHTML(combo, i)).join('');
             }
 
-            // TODO: really want a master Component for the renderArea
-            //document.getElementById("renderArea").innerHTML = this.cachedCombinations[this.nValue];
             this.currentVal = this.nValue;
-
             this.updateManager({'currentCombinations' : combinations});
-
-            // TODO: this is a global function and needs to be accessible to this Component
-            // toggleFirstRowVisibility();
         }
-    }
+    };
+
+    return mixin__PageManagerAware(component);
 }

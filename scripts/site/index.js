@@ -23,11 +23,11 @@ import { PageManager } from "page-manager";
     function initialize() {
         const pageManager = PageManager();
 
-        const gridFormInstance = GenerateGridFormComponent().registerManager(pageManager);
+        const gridFormInstance = GenerateGridFormComponent();
         const metronomeFormInstance = MetronomeFormComponent();
         const autoscrollFormInstance = AutoscrollFormComponent();
-        const viewOptionsFormInstance = ViewOptionsFormComponent().registerManager(pageManager);
-        const renderAreaInstance = RenderAreaComponent().registerManager(pageManager);
+        const viewOptionsFormInstance = ViewOptionsFormComponent();
+        const renderAreaInstance = RenderAreaComponent();
 
         const controlPanelComponents = [
             {
@@ -64,6 +64,14 @@ import { PageManager } from "page-manager";
         });
 
         const consentBannerInstance = ConsentBannerComponent();
+
+        // Initialize any mixin functionality
+        for (const instance of
+            [gridFormInstance, metronomeFormInstance, autoscrollFormInstance, viewOptionsFormInstance,
+                renderAreaInstance, controlPanelInstance, sideMenuInstance, consentBannerInstance]
+        ) {
+            if (instance.isPageManagerAware) instance.registerManager(pageManager);
+        }
 
 
         // TODO: add event listeners for keyboard inputs to change metronome

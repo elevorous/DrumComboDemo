@@ -10,6 +10,9 @@
 
 'use strict';
 
+import { mixin__PageManagerAware } from "page-manager";
+
+
 /**
 * @Component
 * A petite-vue Component representing
@@ -20,19 +23,17 @@
 * @return {object} - a RenderAreaComponent instance
 */
 export function RenderAreaComponent(props) {
-    return {
+    let component = {
         $template: '#render-area-component-template',
-        manager: null,
-        registerManager(manager) {
-            this.manager = manager;
-            return this;
-        },
 
+        /* ------------------ Getters ------------------ */
         get currentCombinations() {
-            return this.manager?.currentCombinations || [];
+            return this._manager?.currentCombinations || [];
         },
         get hideEmptyRow() {
-            return this.manager?.hideEmptyRow;
+            return this._manager?.hideEmptyRow;
         }
-    }
+    };
+
+    return mixin__PageManagerAware(component);
 }
