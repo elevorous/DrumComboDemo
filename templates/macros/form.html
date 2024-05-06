@@ -1,0 +1,46 @@
+{% macro formControl(fcBody="") -%}
+    <div class="form-control">
+        <div class="form-control__control">
+            {$ fcBody $}
+        </div>
+        <div class="form-control__messages">
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro input(
+    name="",
+    id="",
+    value="",
+    type="text",
+    hideLabel=false,
+    label="",
+    vModel="",
+    attrs={}
+) %}
+    {%- set fcBody -%}
+        <label {% if id %}for="{$ id $}" {% endif -%}
+            {%- if hideLabel %}class="u-hidden-visually"{% endif -%}
+       >
+            {$ label $}
+        </label>
+        <input type="{$ type $}" 
+            {%- if id %}id="{$ id $}" {% endif -%}
+            {%- if name %}name="{$ name $}" {% endif -%}
+            {%- if value %}value="{$ value $}" {% endif -%}
+            {%- if vModel %}v-model="{$ vModel $}" {% endif -%}
+            {%- for k,v in attrs %}{$ k $}="{$ v $}" {% endfor -%}>
+    {%- endset -%}
+    {# 
+        Very annoying. In Nunjucks, you can't pass parent scope variables
+        into the body of the call block.
+        - https://github.com/mozilla/nunjucks/issues/906
+        Also nested macro invocations don't seem to work.
+        - https://github.com/mozilla/nunjucks/issues/679
+        So, we're in a position where we need to use call() to invoke our
+        macro, but since caller() inside it won't do anything useful (apparently for interpolated
+        HTML like strings, plain strings seem to work fine??), we need to pass the call body as 
+        an argument of the macro :/
+    #}
+    {%- call formControl(fcBody) -%}{%- endcall -%}
+{% endmacro %}

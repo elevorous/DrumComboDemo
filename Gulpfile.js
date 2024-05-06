@@ -1,4 +1,8 @@
-var integrations = require("./integrations.js");
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const __dirname = import.meta.dirname;
+
+var integrations = require("./integrations.cjs");
 var gulp = require("gulp");
 /**
 * @see https://github.com/pioug/gulp-preprocess
@@ -13,7 +17,12 @@ var mode = require("gulp-mode")({
     default: "gulpModeDev",
     verbose: false
 });
-var { createHash } = require("node:crypto")
+var { createHash } = require("node:crypto");
+/**
+* @see https://www.npmjs.com/package/gulp-nunjucks
+*/
+import { nunjucksCompile } from "gulp-nunjucks";
+import nunjucks from "nunjucks";
 
 const TEMPLATE_ROOT = "./templates/**/*.html";
 const TEMPLATE_PREPROCESS_SRC = "./templates/site/index.html";
@@ -25,6 +34,8 @@ const SASS_DEST = "./css";
 const SASS_MQ_INCLUDE_PATH = "./node_modules/sass-mq/_mq.scss";
 
 const isLive = mode.gulpModeLive();
+
+const SITE_VERSION = 'alpha-0.2';
 
 const IMPORT_MAP = `{
     "imports": {
@@ -49,12 +60,24 @@ const IMPORT_MAP_HASH = createHash('sha256').update(IMPORT_MAP).digest('base64')
 
 gulp.task("html", function() {
     return gulp.src(TEMPLATE_PREPROCESS_SRC)
-                .pipe(preprocess({
-                    context: Object.assign((isLive ? integrations.LIVE : integrations.DEV), {
-                        'IMPORT_MAP': IMPORT_MAP,
-                        'IMPORT_MAP_HASH': IMPORT_MAP_HASH
-                    })
-                }))
+                .pipe(nunjucksCompile(
+                    // data
+                    Object.assign((isLive ? integrations.LIVE : integrations.DEV), {
+                        'importMap': IMPORT_MAP,
+                        'importMapHash': IMPORT_MAP_HASH,
+                        'siteVersion': SITE_VERSION
+                    }),
+                    // set a new Environment to make sure the root dir of the templates is properly set.
+                    {
+                        env: nunjucks.configure(__dirname + "/templates", {
+                            autoescape: false,
+                            tags: {
+                                variableStart: '{$',
+                                variableEnd: '$}'
+                            }
+                        })
+                    }
+                ))
                 .pipe(gulp.dest(TEMPLATE_PREPROCESS_DEST));
 });
 
@@ -74,4 +97,4 @@ gulp.task("watch-sass", function() {
     return gulp.watch(SASS_SRC, gulp.series("sass"));
 });
 
-exports.default = gulp.series("html", "sass", gulp.parallel("watch-html", "watch-sass"));
+export default gulp.series("html", "sass", gulp.parallel("watch-html", "watch-sass"));
