@@ -2,14 +2,22 @@
     @see /scripts/site/petite-vue/component.generate-grid-form.js
     @author elevorous
 #}
+{% import "../../macros/form.html" as form %}
+{% import "../../macros/utils.html" as utils %}
 <template id="generate-grid-form-component-template">
     <form id="generate-grid-form" v-on:submit.prevent="generateGrid">
+        {$ form.input(
+            id="nValue",
+            type="number",
+            label="n",
+            vModel="nValue",
+            attrs={
+                ":min": "minNValue",
+                ":max": "maxNValue"
+            }
+        ) $}
         <div>
-            <label for="nValue">n</label>
-            <input type="number" id="nValue" v-model="nValue" :min="minNValue" :max="maxNValue">
-        </div>
-        <div>
-            <button type="submit">Generate</button>
+            {$ utils.button(label="Generate", type="submit") $}
         </div>
     </form>
 </template>

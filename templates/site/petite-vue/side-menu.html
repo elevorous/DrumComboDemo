@@ -2,12 +2,13 @@
     @see /scripts/site/petite-vue/component.side-menu.js
     @author elevorous
 #}
+{% import "../../macros/utils.html" as utils %}
 <template id="side-menu-component-template">
     <div class="side-menu" :data-menu-open="isOpen">
         <div class="side-menu-toggle">
-            <button type="button" @click="toggleMenu">
+            {%- call utils.button(attrs={"@click": "toggleMenu"}) -%}
                 {{ isOpen ? "Hide menu" : "Show menu" }}
-            </button>
+            {%- endcall -%}
         </div>
         <div class="side-menu__menu">
             <div class="side-menu__menu-items">

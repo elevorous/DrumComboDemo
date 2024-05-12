@@ -2,6 +2,7 @@
     @see /scripts/site/petite-vue/component.consent-banner.js
     @author elevorous
 #}
+{% import "../../macros/utils.html" as utils %}
 <template id="consent-banner-component-template">
     <div class="consent-banner" v-if="!isHidden">
         <div class="consent-banner--inner o-container">
@@ -11,8 +12,8 @@
             <div class="consent-banner__form">
                 <form id="consent-form" v-on:submit.prevent="submitConsent(event.submitter.value)">
                     <!-- Only functional should be first in the DOM as the default action if Enter it hit. -->
-                    <button type="submit" name="consent-level" value="0">Only functional, thanks</button>
-                    <button type="submit" name="consent-level" value="1">I'm okay with analytics</button>
+                    {$ utils.button(type="submit", name="consent-level", value="0", label="Only functional, thanks") $}
+                    {$ utils.button(type="submit", name="consent-level", value="1", label="I'm okay with analytics") $}
                 </form>
             </div>
         </div>

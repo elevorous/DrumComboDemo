@@ -25,9 +25,10 @@
                 ":max": "MAX_ROW_GAP"
             }
         ) $}
-        <div>
-            <input type="checkbox" id="hideEmptyRow" v-model="hideEmptyRow">
-            <label for="hideEmptyRow">Hide empty row</label>
-        </div>
+        {$ form.checkbox(
+            id="hideEmptyRow",
+            label="Hide empty row",
+            vModel="hideEmptyRow"
+        ) $}
     </form>
 </template>

@@ -1,0 +1,39 @@
+{% macro icon(name="", ariaLabel="", cssClasses="") %}
+    <span class="icon icon--{$ name $} {$ cssClasses $}" {% if ariaLabel -%}
+        aria-label="{$ ariaLabel $}"{%- else -%}aria-hidden="true"{%- endif -%}
+    ></span>
+{% endmacro %}
+
+{% macro button(
+    type="button",
+    value="",
+    name="",
+    cssClasses="",
+    label="",
+    iconName="",
+    iconAfter=false,
+    hideLabel=false,
+    attrs={}
+) %}
+    {%- set iconContent -%}
+        <span class="button-icon">
+            {%- call icon(name=iconName) -%}{%- endcall -%}
+        </span>
+    {%- endset -%}
+    <button class="button {$ cssClasses $}"
+        {%- if type %} type="{$ type $}"{% endif -%}
+        {%- if value %} value="{$ value $}"{% endif -%}
+        {%- if name %} name="{$ name $}"{% endif -%}
+        {%- for k,v in attrs %} {$ k $}="{$ v $}"{% endfor -%}
+    >
+        {%- if iconName and not iconAfter -%}
+            {$ iconContent $}
+        {%- endif -%}
+        <span class="button-text {$ 'u-hidden-visually' if hideLabel else '' $}">
+            {%- if caller -%}{$ caller() $}{%- else -%}{$ label $}{%- endif -%}
+        </span>
+        {%- if iconName and iconAfter -%}
+            {$ iconContent $}
+        {%- endif -%}
+    </button>
+{% endmacro %}

@@ -1,10 +1,10 @@
-{% macro formControl(fcBody="") -%}
-    <div class="form-control">
+{% macro formControl(fcBody="", fcCssClasses="") -%}
+    <div class="form-control {$ fcCssClasses $}">
         <div class="form-control__control">
             {$ fcBody $}
         </div>
-        <div class="form-control__messages">
-        </div>
+        {# <div class="form-control__messages">
+        </div> #}
     </div>
 {%- endmacro %}
 
@@ -15,23 +15,40 @@
     type="text",
     hideLabel=false,
     label="",
+    labelAfter=false,
     vModel="",
-    attrs={}
+    required=false,
+    attrs={},
+    postInput=""
 ) %}
-    {%- set fcBody -%}
-        <label {% if id %}for="{$ id $}" {% endif -%}
-            {%- if hideLabel %}class="u-hidden-visually"{% endif -%}
-       >
-            {$ label $}
+    {%- set fcLabel -%}
+        <label {% if id %} for="{$ id $}"{% endif -%}
+            {%- if hideLabel %} class="u-hidden-visually"{% endif -%}
+        >
+            <span>{$ label $}</span>
+            {%- if required -%}
+                <span aria-hidden="true">*</span>
+            {%- endif -%}
         </label>
-        <input type="{$ type $}" 
-            {%- if id %}id="{$ id $}" {% endif -%}
-            {%- if name %}name="{$ name $}" {% endif -%}
-            {%- if value %}value="{$ value $}" {% endif -%}
-            {%- if vModel %}v-model="{$ vModel $}" {% endif -%}
-            {%- for k,v in attrs %}{$ k $}="{$ v $}" {% endfor -%}>
     {%- endset -%}
-    {# 
+    {%- set fcBody -%}
+        {%- if not labelAfter -%}
+            {$ fcLabel $}
+        {%- endif %}
+        <input type="{$ type $}"
+            {%- if id %} id="{$ id $}"{% endif -%}
+            {%- if name %} name="{$ name $}"{% endif -%}
+            {%- if value %} value="{$ value $}"{% endif -%}
+            {%- if vModel %} v-model="{$ vModel $}"{% endif -%}
+            {%- if required %} required{% endif -%}
+            {%- for k,v in attrs %} {$ k $}="{$ v $}"{% endfor -%}
+        >
+        {%- if postInput -%}{$ postInput $}{% endif %}
+        {%- if labelAfter -%}
+            {$ fcLabel $}
+        {%- endif %}
+    {%- endset -%}
+    {#
         Very annoying. In Nunjucks, you can't pass parent scope variables
         into the body of the call block.
         - https://github.com/mozilla/nunjucks/issues/906
@@ -39,8 +56,32 @@
         - https://github.com/mozilla/nunjucks/issues/679
         So, we're in a position where we need to use call() to invoke our
         macro, but since caller() inside it won't do anything useful (apparently for interpolated
-        HTML like strings, plain strings seem to work fine??), we need to pass the call body as 
+        HTML like strings, plain strings seem to work fine??), we need to pass the call body as
         an argument of the macro :/
     #}
-    {%- call formControl(fcBody) -%}{%- endcall -%}
+    {%- call formControl(fcBody=fcBody, fcCssClasses="form-control--" + type) -%}{%- endcall -%}
+{% endmacro %}
+
+{% macro checkbox(
+    name="",
+    id="",
+    value="",
+    hideLabel=false,
+    label="",
+    vModel="",
+    required=false,
+    attrs={}
+) %}
+    {%- call input(
+        name=name,
+        id=id,
+        value=value,
+        type="checkbox",
+        label=label,
+        labelAfter=true,
+        hideLabel=hideLabel,
+        vModel=vModel,
+        required=required,
+        attrs=attrs
+    ) -%}{%- endcall -%}
 {% endmacro %}

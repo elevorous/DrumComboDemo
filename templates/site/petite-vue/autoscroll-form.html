@@ -2,23 +2,38 @@
     @see /scripts/site/petite-vue/component.autoscroll-form.js
     @author elevorous
 #}
+{% import "../../macros/form.html" as form %}
 <template id="autoscroll-form-component-template">
     <form id="autoscroll-form" v-on:submit.prevent>
-        <div>
-            <input type="checkbox" id="enableAutoScroll" v-model="enableAutoScroll">
-            <label for="enableAutoScroll">Auto scroll</label>
-        </div>
-        <div>
-            <label for="repetitions">Repetitions</label>
-            <input type="number" id="repetitions" v-model="repetitions" :min="MIN_REPETITIONS" :max="MAX_REPETITIONS">
-        </div>
-        <div>
-            <input type="checkbox" id="enablePreamble" v-model="enablePreamble">
-            <label for="enablePreamble">Enable Preamble</label>
-        </div>
-        <div>
-            <label for="preambleBeats">Preamble Beats</label>
-            <input type="number" id="preambleBeats" v-model="preambleBeats" :min="MIN_PREAMBLE_BEATS" :max="MAX_PREAMBLE_BEATS">
-        </div>
+        {$ form.checkbox(
+            id="enableAutoScroll",
+            label="Auto scroll",
+            vModel="enableAutoScroll"
+        ) $}
+        {$ form.input(
+            id="repetitions",
+            type="number",
+            label="Repetitions",
+            vModel="repetitions",
+            attrs={
+                ":min": "MIN_REPETITIONS",
+                ":max": "MAX_REPETITIONS"
+            }
+        ) $}
+        {$ form.checkbox(
+            id="enablePreamble",
+            label="Enable Preamble",
+            vModel="enablePreamble"
+        ) $}
+        {$ form.input(
+            id="preambleBeats",
+            type="number",
+            label="Preamble Beats",
+            vModel="preambleBeats",
+            attrs={
+                ":min": "MIN_PREAMBLE_BEATS",
+                ":max": "MAX_PREAMBLE_BEATS"
+            }
+        ) $}
     </form>
 </template>
